@@ -168,7 +168,7 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ## Phase 4: Content Migration & Shortcode Cleanup
 
-### [ ] Task 8: Export Timestamped Backup & Clean Legacy WPBakery Grid Shortcodes
+### [x] Task 8: Export Timestamped Backup & Clean Legacy WPBakery Grid Shortcodes
 * **Description:** Export a timestamped database backup under the `YYYY-MM-DD-HHMMSS-db_name.sql` pattern. Then, parse database post contents and replace/strip out WPBakery grid shortcodes (`[vc_*]`) to return clean Gutenberg layout block structures.
 * **Acceptance criteria:**
   - Pre-transformation backup exists at the project root with the correct timestamped filename.
@@ -182,7 +182,7 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ---
 
-### [ ] Task 8.5: Activate Flagship Theme & Synchronize Polylang
+### [x] Task 8.5: Activate Flagship Theme & Synchronize Polylang
 * **Description:** Activate the `ekalexandria-flagship` theme to formally load the new architectures on the frontend. Use WP-CLI to map all newly created `neo_fos` and `board_member` entries to the Greek language (`el`) to fix Polylang archive routing. Finally, flush the rewrite rules so the RSS feed `/feed/neo-fos/` goes live.
 * **Acceptance criteria:**
   - Theme is active.
@@ -195,10 +195,11 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ---
 
-### [ ] Task 9: Rebuild Home & News Layouts with Gutenberg Blocks
-* **Description:** Manually convert the legacy Home page ("Αρχική", ID `13236`) and News page ("Νέα", ID `8934`) layouts into clean Gutenberg block grids matching the styling standards of the flagship theme.
+### [ ] Task 9: Reconstruct FSE Templates & Rebuild Gutenberg Layouts
+* **Description:** Construct the native Block templates (`front-page.html`, `home.html`, `single.html`, `page.html`) and template parts (`header.html`, `footer.html`). Integrate Polylang via native Navigation Block menus and a custom shortcode for the language switcher. Manually convert the legacy Home page (ID `13236`) and News page (ID `8934`) layouts into clean Gutenberg block grids matching the new FSE architecture.
 * **Acceptance criteria:**
-  - Homepage resolves with custom header, main intro copy, page grid, and footer block structures.
+  - FSE templates exist in `templates/` and `parts/`.
+  - Homepage resolves with custom header, main intro copy, page grid, and footer block structures natively adapting to Polylang translations.
   - News page lists post loops without legacy widget shortcodes.
 * **Verification:**
   - Open `https://backstage.ekalexandria.org/` and inspect page layouts.
@@ -208,7 +209,7 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ---
 
-### [ ] Task 10: Purge Legacy Builder Plugins
+### [x] Task 10: Purge Legacy Builder Plugins
 * **Description:** Now that the layout parsing and page migrations are successfully complete, deactivate and completely delete `js_composer` (WPBakery Builder) and `LayerSlider` plugins.
 * **Acceptance criteria:**
   - Legacy plugins no longer show in the WP active or inactive plugin catalog.

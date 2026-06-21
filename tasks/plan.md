@@ -28,6 +28,13 @@ Before performing destructive database cleanups on legacy `wp_posts` (like remov
 ### 3. Polylang Compatibility (Language Assignments)
 Since Polylang is strictly managing language routes (`/el/` and `/ar/`), any programmatically created Custom Post Type (like `neo_fos` or `board_member`) MUST be assigned a default language (Greek) during migration. Otherwise, they will be orphaned in the database and cause 404s on archive and RSS feed routes.
 
+### 4. FSE Template Hierarchy Reconstruction
+The cloned `flagship` theme is a minimal baseline. To fully support the complex layout required by Polylang (static homepages, distinct blog archives, custom post type singles), we must reconstruct a standard WordPress Full Site Editing template hierarchy:
+- `front-page.html`: The static homepage template leveraging Gutenberg Post Content to dynamically output the Greek or Arabic page contents.
+- `home.html`: The blog index leveraging the Query Loop block inherited from the global query.
+- `single.html` & `page.html`: Universal single-view wrappers.
+- `parts/header.html`: Universal header containing a dynamic Navigation Menu block (swapped automatically by Polylang) and a custom Language Switcher.
+
 ---
 
 ## Risks and Mitigations
