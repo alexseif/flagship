@@ -233,7 +233,7 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ---
 
-### [ ] Task 10a: Upgrade Staging PHP Environment to PHP 8.3/8.4
+### [x] Task 10a: Upgrade Staging PHP Environment to PHP 8.3/8.4
 * **Description:** Switch the Nginx server block to use `php8.2-fpm.sock` (representing PHP 8.2 / 8.3 / 8.4) and verify that the modernized site runs cleanly without errors under the new PHP version.
 * **Acceptance criteria:**
   - Nginx configuration updated to `fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;`.
@@ -248,11 +248,11 @@ This file serves as the tracking document for all micro-tasks required to comple
 ---
 
 ## Checkpoint: Core Pages Cleaned & Legacy Plugins Removed
-- [ ] Home and News pages render using native editor layout structures.
-- [ ] WPBakery artifacts purged from active content tables.
-- [ ] Legacy page builder and slider plugins deleted.
-- [ ] Staging PHP environment upgraded successfully to PHP 8.3/8.4.
-- [ ] Commit content updates: Run `git commit -m "feat(migration): parse legacy database content layouts, purge legacy builder plugins, and upgrade PHP environment"` inside the theme folder.
+- [x] Home and News pages render using native editor layout structures.
+- [x] WPBakery artifacts purged from active content tables.
+- [x] Legacy page builder and slider plugins deleted.
+- [x] Staging PHP environment upgraded successfully to PHP 8.3/8.4.
+- [x] Commit content updates: Run `git commit -m "feat(migration): parse legacy database content layouts, purge legacy builder plugins, and upgrade PHP environment"` inside the theme folder.
 
 ---
 
