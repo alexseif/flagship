@@ -223,3 +223,12 @@ function ekalexandria_register_board_member_cpt() {
     register_post_type( 'board_member', $args );
 }
 add_action( 'init', 'ekalexandria_register_board_member_cpt', 0 );
+
+// Register Polylang Switcher Shortcode for FSE Header
+function ekalexandria_polylang_shortcode() {
+    if ( function_exists('pll_the_languages') ) {
+        return '<ul class="polylang-switcher" style="display:flex; list-style:none; gap:10px; margin:0; padding:0; align-items:center;">' . pll_the_languages( array( 'echo' => 0, 'hide_current' => 0 ) ) . '</ul>';
+    }
+    return '';
+}
+add_shortcode( 'polylang_langswitcher', 'ekalexandria_polylang_shortcode' );

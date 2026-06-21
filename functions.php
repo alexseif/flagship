@@ -51,3 +51,10 @@ function flagship_register_block_styles() {
 add_action('init', 'flagship_register_block_styles');
 
 require_once get_theme_file_path( '/inc/custom-features.php' );
+
+// Disable Contact Form 7 reCAPTCHA during development
+add_filter( 'wpcf7_use_recaptcha_net', '__return_false' );
+add_action( 'wp_print_scripts', function() {
+    wp_dequeue_script( 'google-recaptcha' );
+    wp_dequeue_script( 'wpcf7-recaptcha' );
+}, 100 );
