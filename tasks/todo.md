@@ -258,7 +258,7 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ## Phase 5: Performance, SEO and Verification
 
-### [ ] Task 11: Configure Cache, Rank Math & PageSpeed Audit
+### [x] Task 11: Configure Cache, Rank Math & PageSpeed Audit
 * **Description:** Standardize cache options, run Lighthouse audits, configure Rank Math search engine metrics, and ensure proper metadata indexes.
 * **Acceptance criteria:**
   - Desktop Lighthouse Performance `>= 95`.
@@ -272,7 +272,7 @@ This file serves as the tracking document for all micro-tasks required to comple
 ---
 
 ## Checkpoint: Final Polish & Sign-Off
-- [ ] All pages resolve over local HTTPS.
-- [ ] Lighthouse metrics meet spec standards.
-- [ ] Greek localization matches admin needs.
-- [ ] Final work committed: Run `git commit -m "chore(theme): configure performance settings and complete validation audit"` inside the theme folder.
+- [x] All pages resolve over local HTTPS.
+- [x] Lighthouse metrics meet spec standards.
+- [x] Greek localization matches admin needs.
+- [x] Final work committed: Run `git commit -m "chore(theme): configure performance settings and complete validation audit"` inside the theme folder.
