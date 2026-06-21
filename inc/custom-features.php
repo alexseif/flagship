@@ -144,3 +144,82 @@ function ekalexandria_render_neo_fos_feed() {
     </rss>
     <?php
 }
+
+// Register ACF Field Group for Neo Fos CPT
+if( function_exists('acf_add_local_field_group') ):
+acf_add_local_field_group(array(
+	'key' => 'group_neo_fos_pdf',
+	'title' => 'Neo Fos PDF Attachment',
+	'fields' => array(
+		array(
+			'key' => 'field_pdf_attachment_link',
+			'label' => 'PDF Attachment Link',
+			'name' => 'pdf_attachment_link',
+			'type' => 'url',
+			'instructions' => 'Enter the direct URL to the PDF file for this issue.',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'default_value' => '',
+			'placeholder' => 'https://...',
+		),
+	),
+	'location' => array(
+		array(
+			array(
+				'param' => 'post_type',
+				'operator' => '==',
+				'value' => 'neo_fos',
+			),
+		),
+	),
+	'menu_order' => 0,
+	'position' => 'normal',
+	'style' => 'default',
+	'label_placement' => 'top',
+	'instruction_placement' => 'label',
+	'hide_on_screen' => '',
+	'active' => true,
+	'description' => '',
+	'show_in_rest' => 1,
+));
+endif;
+
+// Register Board Member Custom Post Type
+function ekalexandria_register_board_member_cpt() {
+    $labels = array(
+        'name'                  => _x( 'Μέλη ΔΣ', 'Post Type General Name', 'ekalexandria-flagship' ),
+        'singular_name'         => _x( 'Μέλος ΔΣ', 'Post Type Singular Name', 'ekalexandria-flagship' ),
+        'menu_name'             => __( 'Μέλη ΔΣ', 'ekalexandria-flagship' ),
+        'all_items'             => __( 'Όλα τα Μέλη ΔΣ', 'ekalexandria-flagship' ),
+        'add_new_item'          => __( 'Προσθήκη νέου Μέλους', 'ekalexandria-flagship' ),
+        'add_new'               => __( 'Προσθήκη', 'ekalexandria-flagship' ),
+        'edit_item'             => __( 'Επεξεργασία', 'ekalexandria-flagship' ),
+        'update_item'           => __( 'Ενημέρωση', 'ekalexandria-flagship' ),
+    );
+    $args = array(
+        'label'                 => __( 'Μέλος ΔΣ', 'ekalexandria-flagship' ),
+        'labels'                => $labels,
+        'supports'              => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
+        'hierarchical'          => false,
+        'public'                => true,
+        'show_ui'               => true,
+        'show_in_menu'          => true,
+        'menu_position'         => 6,
+        'menu_icon'             => 'dashicons-businessman',
+        'show_in_admin_bar'     => true,
+        'show_in_nav_menus'     => true,
+        'can_export'            => true,
+        'has_archive'           => false,
+        'exclude_from_search'   => false,
+        'publicly_queryable'    => true,
+        'capability_type'       => 'post',
+        'show_in_rest'          => true, // Enable Gutenberg editor
+    );
+    register_post_type( 'board_member', $args );
+}
+add_action( 'init', 'ekalexandria_register_board_member_cpt', 0 );

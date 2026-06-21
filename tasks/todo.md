@@ -136,6 +136,36 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ---
 
+## Phase 3.5: ACF Integration & Neo Fos Migration
+
+### [x] Task 7.1: Install & Configure Advanced Custom Fields
+* **Description:** Install the Advanced Custom Fields (ACF) plugin via WP-CLI and create a PHP-based field group for the `neo_fos` CPT to hold the PDF attachment link (`pdf_attachment_link`).
+* **Acceptance criteria:**
+  - ACF is active.
+  - Field group displays on `neo_fos` post editor.
+* **Verification:**
+  - Check plugin list and inspect editor.
+
+---
+
+### [x] Task 7.3: Pre-Cleanup Data Migration Script
+* **Description:** Write and execute a script to query legacy "Επιστημονικό Φως" posts, extract their PDF links, generate new `neo_fos` CPT entries, and populate the ACF field before the legacy posts are removed or shortcodes purged.
+* **Acceptance criteria:**
+  - Legacy PDFs successfully migrated into the new `neo_fos` library.
+* **Verification:**
+  - Run `wp post list --post_type=neo_fos` and verify ACF metadata.
+
+---
+
+### [x] Task 7.4: Register Board Members CPT & Migrate Testimonials
+* **Description:** Register `board_member` Custom Post Type. Write a script to query legacy "testimonial" post types, extract their content, generate new `board_member` entries, and trash the old testimonials.
+* **Acceptance criteria:**
+  - Testimonials successfully migrated to the `board_member` CPT.
+* **Verification:**
+  - Run `wp post list --post_type=board_member`.
+
+---
+
 ## Phase 4: Content Migration & Shortcode Cleanup
 
 ### [ ] Task 8: Export Timestamped Backup & Clean Legacy WPBakery Grid Shortcodes
@@ -149,6 +179,19 @@ This file serves as the tracking document for all micro-tasks required to comple
 * **Dependencies:** Task 2, Task 5
 * **Files likely touched:** Database tables via custom parser script
 * **Estimated scope:** Medium [1 helper script]
+
+---
+
+### [ ] Task 8.5: Activate Flagship Theme & Synchronize Polylang
+* **Description:** Activate the `ekalexandria-flagship` theme to formally load the new architectures on the frontend. Use WP-CLI to map all newly created `neo_fos` and `board_member` entries to the Greek language (`el`) to fix Polylang archive routing. Finally, flush the rewrite rules so the RSS feed `/feed/neo-fos/` goes live.
+* **Acceptance criteria:**
+  - Theme is active.
+  - Polylang maps CPTs correctly.
+  - RSS Feed resolves without 404.
+* **Verification:**
+  - Check `wp theme list` and `curl -I -k https://backstage.ekalexandria.org/feed/neo-fos/`
+* **Dependencies:** Task 8
+* **Estimated scope:** XS [0 files]
 
 ---
 

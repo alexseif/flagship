@@ -15,25 +15,18 @@ This plan outlines the systematic modernization of `ekalexandria.org` on a local
 
 ---
 
-## Token Cost Estimation & Optimization Policies
-To optimize developer cost, tasks will be run using a mix of local models (via `aider` or `ollama`) and API models (Gemini 3.5 Flash).
+## Data Migration & Integration Strategy
 
-### Token Cost Projections
+### 1. Advanced Custom Fields (ACF) Integration
+To properly structure PDF attachments for the **Neo Fos** (Αλεξανδρινός Ταχυδρόμος) archive, we will install ACF and define a PHP-based field group containing `pdf_attachment_link`. This replaces unstructured links with filterable metadata.
 
-| Phase / Task Type | Est. Runs | Model Recommendation | Est. Input Tokens / Run | Est. Output Tokens / Run | Est. API Cost (Gemini 3.5 Flash) | Est. API Cost (High Reasoning) |
-|---|---|---|---|---|---|---|
-| **Phase 1: Configs & DB Setup** | 3 | Gemini 3.5 Flash | 25,000 | 1,500 | ~$0.012 | ~$0.25 |
-| **Phase 2: Theme Setup & SCSS** | 3 | Gemini 3.5 Flash | 30,000 | 2,000 | ~$0.012 | ~$0.24 |
-| **Phase 3: Core Theme Features** | 2 | Gemini 3.5 Flash | 35,000 | 2,500 | ~$0.010 | ~$0.20 |
-| **Phase 4: Content Parsing / Regex** | 2 | High Reasoning | 50,000 | 3,000 | ~$0.020 | ~$0.60 |
-| **Phase 5: Gutenberg Rebuilds** | 2 | High Reasoning | 60,000 | 4,000 | ~$0.025 | ~$0.80 |
-| **Phase 6: QA, RTL & Polish** | 3 | Gemini 3.5 Flash | 40,000 | 2,000 | ~$0.015 |  ~$0.35 |
-| **Total Projected Project Cost** | **15 Runs** | **Hybrid Orchestration** | **~550,000** | **~32,000** | **~$0.09** | **~$2.44** |
+### 2. Pre-Cleanup Custom Migrations
+Before performing destructive database cleanups on legacy `wp_posts` (like removing WPBakery `[vc_*]` tags), we execute targeted extraction scripts:
+- **Neo Fos Extraction:** Parse the single page "αλεξανδρινός-ταχυδρόμος" to extract all `<a href="...pdf">` anchors, creating individual `neo_fos` Custom Post Types for each issue.
+- **Board Members:** Extract old `testimonial` posts and migrate them into the new `board_member` Custom Post Type.
 
-### Guidelines to Minimize Token / Cost Consumption
-1. **Selective Context Parsing:** Never dump database SQL file outputs, HTML page source codes, or compiled stylesheets directly into the prompt. Pass only configuration headers, JSON structure outlines, and PHP class interfaces.
-2. **Local Aider-Ollama Target:** For standard file manipulation, terminal tasks, and config compilation (e.g. Phase 1 & 2), utilize a local lightweight model to zero out API costs.
-3. **Reasoning Redirection:** Only redirect tasks to reasoning models when converting complex serialized shortcode lists to nested HTML or resolving PHP 8.3/8.4 syntax deprecation blocks.
+### 3. Polylang Compatibility (Language Assignments)
+Since Polylang is strictly managing language routes (`/el/` and `/ar/`), any programmatically created Custom Post Type (like `neo_fos` or `board_member`) MUST be assigned a default language (Greek) during migration. Otherwise, they will be orphaned in the database and cause 404s on archive and RSS feed routes.
 
 ---
 
