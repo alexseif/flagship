@@ -49,3 +49,5 @@ function flagship_register_block_styles() {
     );
 }
 add_action('init', 'flagship_register_block_styles');
+
+require_once get_theme_file_path( '/inc/custom-features.php' );

@@ -1,0 +1,146 @@
+<?php
+/**
+ * Custom Post Types and Admin Features
+ */
+
+// Register Neo Fos Custom Post Type
+function ekalexandria_register_neo_fos_cpt() {
+    $labels = array(
+        'name'                  => _x( 'Νέο Φως', 'Post Type General Name', 'ekalexandria-flagship' ),
+        'singular_name'         => _x( 'Νέο Φως', 'Post Type Singular Name', 'ekalexandria-flagship' ),
+        'menu_name'             => __( 'Νέο Φως', 'ekalexandria-flagship' ),
+        'name_admin_bar'        => __( 'Νέο Φως', 'ekalexandria-flagship' ),
+        'archives'              => __( 'Αρχείο Νέο Φως', 'ekalexandria-flagship' ),
+        'attributes'            => __( 'Ιδιότητες', 'ekalexandria-flagship' ),
+        'parent_item_colon'     => __( 'Γονικό:', 'ekalexandria-flagship' ),
+        'all_items'             => __( 'Όλα τα Νέο Φως', 'ekalexandria-flagship' ),
+        'add_new_item'          => __( 'Προσθήκη νέου', 'ekalexandria-flagship' ),
+        'add_new'               => __( 'Προσθήκη νέου', 'ekalexandria-flagship' ),
+        'new_item'              => __( 'Νέο', 'ekalexandria-flagship' ),
+        'edit_item'             => __( 'Επεξεργασία', 'ekalexandria-flagship' ),
+        'update_item'           => __( 'Ενημέρωση', 'ekalexandria-flagship' ),
+        'view_item'             => __( 'Προβολή', 'ekalexandria-flagship' ),
+        'view_items'            => __( 'Προβολή στοιχείων', 'ekalexandria-flagship' ),
+        'search_items'          => __( 'Αναζήτηση', 'ekalexandria-flagship' ),
+        'not_found'             => __( 'Δεν βρέθηκε', 'ekalexandria-flagship' ),
+        'not_found_in_trash'    => __( 'Δεν βρέθηκε στον Κάδο', 'ekalexandria-flagship' ),
+        'featured_image'        => __( 'Επιλεγμένη εικόνα', 'ekalexandria-flagship' ),
+        'set_featured_image'    => __( 'Ορισμός εικόνας', 'ekalexandria-flagship' ),
+        'remove_featured_image' => __( 'Αφαίρεση εικόνας', 'ekalexandria-flagship' ),
+        'use_featured_image'    => __( 'Χρήση ως εικόνας', 'ekalexandria-flagship' ),
+        'insert_into_item'      => __( 'Εισαγωγή στο στοιχείο', 'ekalexandria-flagship' ),
+        'uploaded_to_this_item' => __( 'Ανέβηκε σε αυτό', 'ekalexandria-flagship' ),
+        'items_list'            => __( 'Λίστα στοιχείων', 'ekalexandria-flagship' ),
+        'items_list_navigation' => __( 'Πλοήγηση λίστας', 'ekalexandria-flagship' ),
+        'filter_items_list'     => __( 'Φιλτράρισμα λίστας', 'ekalexandria-flagship' ),
+    );
+    $args = array(
+        'label'                 => __( 'Νέο Φως', 'ekalexandria-flagship' ),
+        'description'           => __( 'Newsletter Ekalexandria', 'ekalexandria-flagship' ),
+        'labels'                => $labels,
+        'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ),
+        'hierarchical'          => false,
+        'public'                => true,
+        'show_ui'               => true,
+        'show_in_menu'          => true,
+        'menu_position'         => 5,
+        'menu_icon'             => 'dashicons-email-alt',
+        'show_in_admin_bar'     => true,
+        'show_in_nav_menus'     => true,
+        'can_export'            => true,
+        'has_archive'           => true,
+        'exclude_from_search'   => false,
+        'publicly_queryable'    => true,
+        'capability_type'       => 'post',
+        'show_in_rest'          => true, // Enable Gutenberg editor
+    );
+    register_post_type( 'neo_fos', $args );
+}
+add_action( 'init', 'ekalexandria_register_neo_fos_cpt', 0 );
+
+// Admin login panel branded
+function ekalexandria_login_logo() { ?>
+    <style type="text/css">
+        #login h1 a, .login h1 a {
+            background-image: url(<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.png);
+            width: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            padding-bottom: 30px;
+        }
+        body.login {
+            background-color: #f5f5f5;
+        }
+    </style>
+<?php }
+add_action( 'login_enqueue_scripts', 'ekalexandria_login_logo' );
+
+// Greek admin dashboard labels for default posts
+function ekalexandria_change_post_menu_label() {
+    global $menu;
+    global $submenu;
+    if(isset($menu[5])) {
+        $menu[5][0] = 'Νέα';
+    }
+    if(isset($submenu['edit.php'])) {
+        $submenu['edit.php'][5][0] = 'Όλα τα Νέα';
+        $submenu['edit.php'][10][0] = 'Προσθήκη Νέου';
+    }
+}
+add_action( 'admin_menu', 'ekalexandria_change_post_menu_label' );
+
+// Add Custom RSS Feed for Neo Fos
+function ekalexandria_custom_rss_feed() {
+    add_feed( 'neo-fos', 'ekalexandria_render_neo_fos_feed' );
+}
+add_action( 'init', 'ekalexandria_custom_rss_feed' );
+
+function ekalexandria_render_neo_fos_feed() {
+    header( 'Content-Type: ' . feed_content_type( 'rss2' ) . '; charset=' . get_option( 'blog_charset' ), true );
+    
+    $args = array(
+        'post_type'      => 'neo_fos',
+        'posts_per_page' => 10,
+    );
+    $query = new WP_Query( $args );
+    
+    echo '<?xml version="1.0" encoding="' . get_option('blog_charset') . '"?>';
+    ?>
+    <rss version="2.0"
+        xmlns:content="http://purl.org/rss/1.0/modules/content/"
+        xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:atom="http://www.w3.org/2005/Atom"
+        xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+        xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+    >
+    <channel>
+        <title><?php bloginfo_rss('name'); ?> - Νέο Φως</title>
+        <atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
+        <link><?php bloginfo_rss('url') ?></link>
+        <description><?php bloginfo_rss('description') ?></description>
+        <lastBuildDate><?php echo get_feed_build_date('r'); ?></lastBuildDate>
+        <language><?php bloginfo_rss( 'language' ); ?></language>
+        
+        <?php while( $query->have_posts()) : $query->the_post(); ?>
+            <item>
+                <title><?php the_title_rss(); ?></title>
+                <link><?php the_permalink_rss(); ?></link>
+                <pubDate><?php echo mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false); ?></pubDate>
+                <dc:creator><![CDATA[<?php the_author(); ?>]]></dc:creator>
+                <guid isPermaLink="false"><?php the_guid(); ?></guid>
+                <description><![CDATA[<?php the_excerpt_rss(); ?>]]></description>
+                <content:encoded><![CDATA[<?php the_content_feed('rss2'); ?>
+                <?php 
+                $pdf_link = get_post_meta( get_the_ID(), 'pdf_attachment_link', true );
+                if ( $pdf_link ) {
+                    echo '<p><a href="' . esc_url( $pdf_link ) . '">Κατεβάστε το PDF</a></p>';
+                }
+                ?>
+                ]]></content:encoded>
+            </item>
+        <?php endwhile; wp_reset_postdata(); ?>
+    </channel>
+    </rss>
+    <?php
+}

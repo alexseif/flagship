@@ -98,7 +98,7 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ## Phase 3: Core Theme Features & CPT Setup
 
-### [ ] Task 6: CPT Registration & Admin Dashboard Branding
+### [x] Task 6: CPT Registration & Admin Dashboard Branding
 * **Description:** Create `inc/custom-features.php` inside the theme folder and require it in `functions.php`. Register the `neo_fos` Custom Post Type inside it, inject admin CSS to brand the login and admin dashboard screens with community styling, and configure localization filters to Greek.
 * **Acceptance criteria:**
   - `neo_fos` CPT editor resolves under Gutenberg blocks.
@@ -114,7 +114,7 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ---
 
-### [ ] Task 7: Neo Fos RSS Feed Automation
+### [x] Task 7: Neo Fos RSS Feed Automation
 * **Description:** Expose a custom RSS feed URL specifically for the `neo_fos` CPT that renders XML containing post titles, contents, and custom field values (PDF attachment link) to support Mailchimp automation.
 * **Acceptance criteria:**
   - Custom feed route resolves.
@@ -129,10 +129,10 @@ This file serves as the tracking document for all micro-tasks required to comple
 ---
 
 ## Checkpoint: Backend & Automation
-- [ ] Newsletter CPT registered.
-- [ ] RSS Feed renders valid RSS schema.
-- [ ] Admin panel localized in Greek and custom branded.
-- [ ] Commit custom features: Run `git commit -m "feat(custom-features): implement newsletter CPT, custom RSS, and Greek admin branding"` inside the theme folder.
+- [x] Newsletter CPT registered.
+- [x] RSS Feed renders valid RSS schema.
+- [x] Admin panel localized in Greek and custom branded.
+- [x] Commit custom features: Run `git commit -m "feat(custom-features): implement newsletter CPT, custom RSS, and Greek admin branding"` inside the theme folder.
 
 ---
 
