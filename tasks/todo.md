@@ -195,7 +195,7 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ---
 
-### [ ] Task 9: Reconstruct FSE Templates & Rebuild Gutenberg Layouts
+### [x] Task 9: Reconstruct FSE Templates & Rebuild Gutenberg Layouts
 * **Description:** Construct the native Block templates (`front-page.html`, `home.html`, `single.html`, `page.html`) and template parts (`header.html`, `footer.html`). Integrate Polylang via native Navigation Block menus and a custom shortcode for the language switcher. Manually convert the legacy Home page (ID `13236`) and News page (ID `8934`) layouts into clean Gutenberg block grids matching the new FSE architecture.
 * **Acceptance criteria:**
   - FSE templates exist in `templates/` and `parts/`.
@@ -206,6 +206,18 @@ This file serves as the tracking document for all micro-tasks required to comple
 * **Dependencies:** Task 5, Task 8
 * **Files likely touched:** Theme template parts and database pages.
 * **Estimated scope:** Medium [3-5 files]
+
+---
+
+### [x] Task 9.5: Migrate Revolution Sliders to Native Blocks
+* **Description:** Find all published pages that contain `[rev_slider ...]` shortcodes (e.g., cemeteries-maintenance) and convert these layout sections into native Gutenberg blocks like `core/cover` or `core/gallery` to remove the dependency on the Revolution Slider plugin.
+* **Acceptance criteria:**
+  - Active pages no longer use `[rev_slider]` shortcodes.
+  - The sliders are visually replaced with native FSE block alternatives.
+* **Verification:**
+  - Run database query: `wp db query "SELECT ID FROM wp_posts WHERE post_content LIKE '%[rev_slider%' AND post_status = 'publish'"` returns empty.
+* **Dependencies:** Task 9
+* **Estimated scope:** Medium [Database updates]
 
 ---
 
