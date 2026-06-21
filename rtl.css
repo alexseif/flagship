@@ -1,8 +1,8 @@
 /*
- * Theme Name: Flagship
+ * Theme Name: Flagship (RTL)
  * Author: Alex Seif
  * Author URI: https://alexseif.com
- * Description: High-performance, KPI-aligned, block-native WordPress theme ecosystem.
+ * Description: RTL stylesheet for Flagship.
  * Version: 1.0.0
  * License: GNU General Public License v2 or later
  */
@@ -177,3 +177,5 @@ a:not(.wp-block-button__link) {
 a:not(.wp-block-button__link):hover {
   opacity: 0.8;
 }
+
+/* RTL overrides go below */

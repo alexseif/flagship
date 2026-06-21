@@ -74,7 +74,7 @@ This file serves as the tracking document for all micro-tasks required to comple
 
 ---
 
-### [ ] Task 5: Configure SCSS Compilation Pipeline
+### [x] Task 5: Configure SCSS Compilation Pipeline
 * **Description:** Update `package.json` inside the theme folder to compile SCSS files (`style.scss` and `rtl.scss`) to standard stylesheet files in the root of the theme.
 * **Acceptance criteria:**
   - Build scripts execute without errors.
@@ -89,10 +89,10 @@ This file serves as the tracking document for all micro-tasks required to comple
 ---
 
 ## Checkpoint: Theme and Stylesheet Environment
-- [ ] Theme setup resolves under WP active themes configuration.
-- [ ] SCSS compilation runs cleanly.
-- [ ] Legacy page builders and slider settings are active for database queries.
-- [ ] Commit initial theme setup: Run `git commit -m "feat(theme): clone flagship theme and configure SCSS compiler"` inside the theme folder.
+- [x] Theme setup resolves under WP active themes configuration.
+- [x] SCSS compilation runs cleanly.
+- [x] Legacy page builders and slider settings are active for database queries.
+- [x] Commit initial theme setup: Run `git commit -m "feat(theme): clone flagship theme and configure SCSS compiler"` inside the theme folder.
 
 ---
 
