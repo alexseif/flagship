@@ -39,14 +39,14 @@
   - [x] `git commit -am "feat: implement dynamic news loops and static gallery placeholders"`
   - [x] `git checkout main && git merge feature/slice-4-placeholders`
 
-- [ ] **Slice 5: Homepage Widgets & Page Recoveries (Branch: `feature/slice-5-page-recovery`)**
-  - [ ] `git checkout -b feature/slice-5-page-recovery`
-  - [ ] Rebuild homepage widgets (Υπηρεσίες, Ιστορία, Ι.Ν. Ευαγγελισμού) using native columns/groups in `front-page.html`.
-  - [ ] Insert native Navigation placeholders for nested in-page sub-menus on Establishment, Activities, and Services parent/child pages (mapping to the respective language menus).
-  - [ ] Restore partner logos on `/el/διάφορα/σύνδεσμοι/`.
-  - [ ] Restore icons on `/el/ανακοινώσεις-νέα/ανακοινώσεις-εκα/`.
-  - [ ] `git commit -am "feat: recover specific page widgets and in-page nested menus"`
-  - [ ] `git checkout main && git merge feature/slice-5-page-recovery`
+- [x] **Slice 5: Homepage Widgets & Page Recoveries (Branch: `feature/slice-5-page-recovery`)**
+  - [x] `git checkout -b feature/slice-5-page-recovery`
+  - [x] Rebuild homepage widgets (Υπηρεσίες, Ιστορία, Ι.Ν. Ευαγγελισμού) using native columns/groups in `front-page.html`.
+  - [x] Insert native Navigation placeholders for nested in-page sub-menus on Establishment, Activities, and Services parent/child pages (mapping to the respective language menus).
+  - [x] Restore partner logos on `/el/διάφορα/σύνδεσμοι/`.
+  - [x] Restore icons on `/el/ανακοινώσεις-νέα/ανακοινώσεις-εκα/`.
+  - [x] `git commit -am "feat: recover specific page widgets and in-page nested menus"`
+  - [x] `git checkout main && git merge feature/slice-5-page-recovery`
 
 - [ ] **Slice 6: Deployment Prep (Branch: `feature/slice-6-sanitization`)**
   - [ ] `git checkout -b feature/slice-6-sanitization`
