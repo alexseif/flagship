@@ -31,21 +31,21 @@
   - [ ] `git commit -am "feat: implement language-specific FSE page templates"`
   - [ ] `git checkout main && git merge feature/slice-3-templates`
 
-- [ ] **Slice 4: Placeholders for Interactive Blocks (Branch: `feature/slice-4-placeholders`)**
+- [ ] **Slice 4: Dynamic Loops & Static Gallery Placeholders (Branch: `feature/slice-4-placeholders`)**
   - [ ] `git checkout -b feature/slice-4-placeholders`
-  - [ ] Insert native Gutenberg placeholder block (e.g., `core/gallery`) for Homepage slider (LayerSlider ID 6).
-  - [ ] Insert native Gutenberg placeholder block for News Page slider (LayerSlider ID 6).
-  - [ ] Insert native Gutenberg placeholder blocks for specific page inner-sliders (Staff, Greek Club, Cemeteries, Music Museum, Science Museum, Cemeteries Conservation).
-  - [ ] `git commit -am "feat: add native block placeholders for sliders"`
+  - [ ] Implement native Gutenberg dynamic Query Loop block for the Homepage to pull the latest 5 News/Ανακοινώσεις posts.
+  - [ ] Implement the same dynamic Query Loop block for the News Page.
+  - [ ] Insert native Gutenberg placeholder blocks (e.g., `core/gallery`) for specific page inner-sliders (Staff, Greek Club, Cemeteries, Music Museum, Science Museum, Cemeteries Conservation).
+  - [ ] `git commit -am "feat: implement dynamic news loops and static gallery placeholders"`
   - [ ] `git checkout main && git merge feature/slice-4-placeholders`
 
 - [ ] **Slice 5: Homepage Widgets & Page Recoveries (Branch: `feature/slice-5-page-recovery`)**
   - [ ] `git checkout -b feature/slice-5-page-recovery`
   - [ ] Rebuild homepage widgets (Υπηρεσίες, Ιστορία, Ι.Ν. Ευαγγελισμού) using native columns/groups in `front-page.html`.
-  - [ ] Insert native Navigation placeholders for nested sub-menus mapped to legacy menus (Establishment Menu, Activity Menu, Service Menu across languages).
+  - [ ] Insert native Navigation placeholders for nested in-page sub-menus on Establishment, Activities, and Services parent/child pages (mapping to the respective language menus).
   - [ ] Restore partner logos on `/el/διάφορα/σύνδεσμοι/`.
   - [ ] Restore icons on `/el/ανακοινώσεις-νέα/ανακοινώσεις-εκα/`.
-  - [ ] `git commit -am "feat: recover specific page widgets and in-page menus"`
+  - [ ] `git commit -am "feat: recover specific page widgets and in-page nested menus"`
   - [ ] `git checkout main && git merge feature/slice-5-page-recovery`
 
 - [ ] **Slice 6: Deployment Prep (Branch: `feature/slice-6-sanitization`)**
