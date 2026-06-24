@@ -278,7 +278,7 @@ acf_add_local_field_group(array(
 		),
 	),
 	'menu_order' => 0,
-	'position' => 'normal',
+	'position' => 'side',
 	'style' => 'default',
 	'label_placement' => 'top',
 	'instruction_placement' => 'label',
@@ -322,6 +322,29 @@ function ekalexandria_neo_fos_pdf_link_shortcode() {
     
     if ( $pdf_url ) {
         return '<div class="wp-block-buttons" style="margin-top:2em;"><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="' . esc_url($pdf_url) . '" target="_blank">' . __('Λήψη / Προβολή PDF', 'ekalexandria-flagship') . '</a></div></div>';
+    }
+    return '';
+}
+
+/**
+ * Shortcode to output Neo Fos Archive Dropdown Filter
+ */
+add_shortcode('neo_fos_archive_filter', 'ekalexandria_neo_fos_archive_filter_shortcode');
+function ekalexandria_neo_fos_archive_filter_shortcode() {
+    $args = array(
+        'type'            => 'monthly',
+        'format'          => 'option',
+        'post_type'       => 'neo_fos',
+        'show_post_count' => false,
+        'echo'            => 0
+    );
+    $options = wp_get_archives($args);
+    if ($options) {
+        $select = '<select name="archive-dropdown" onchange="document.location.href=this.options[this.selectedIndex].value;">';
+        $select .= '<option value="">' . __('Επιλέξτε Μήνα', 'ekalexandria-flagship') . '</option>';
+        $select .= $options;
+        $select .= '</select>';
+        return '<div class="neo-fos-filter" style="margin-bottom:20px;">' . $select . '</div>';
     }
     return '';
 }
