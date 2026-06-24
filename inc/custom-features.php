@@ -38,7 +38,7 @@ function ekalexandria_register_neo_fos_cpt() {
         'label'                 => __( 'Νέο Φως', 'ekalexandria-flagship' ),
         'description'           => __( 'Newsletter Ekalexandria', 'ekalexandria-flagship' ),
         'labels'                => $labels,
-        'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ),
+        'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
         'hierarchical'          => false,
         'public'                => true,
         'show_ui'               => true,
@@ -232,3 +232,97 @@ function ekalexandria_polylang_shortcode() {
     return '';
 }
 add_shortcode( 'polylang_langswitcher', 'ekalexandria_polylang_shortcode' );
+
+/**
+ * Enable Polylang support for custom post types
+ */
+function ekalexandria_pll_cpt_support( $post_types, $is_settings ) {
+    $post_types['board_member'] = 'board_member';
+    $post_types['neo_fos'] = 'neo_fos';
+    return $post_types;
+}
+add_filter( 'pll_get_post_types', 'ekalexandria_pll_cpt_support', 10, 2 );
+
+if( function_exists('acf_add_local_field_group') ):
+acf_add_local_field_group(array(
+	'key' => 'group_neo_fos_pdf',
+	'title' => 'Neo Fos PDF',
+	'fields' => array(
+		array(
+			'key' => 'field_neo_fos_pdf_file',
+			'label' => 'Upload PDF File',
+			'name' => 'neo_fos_pdf_file',
+			'type' => 'file',
+			'instructions' => 'Upload the PDF for this issue. This will be used as the direct link.',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'return_format' => 'id',
+			'library' => 'all',
+			'min_size' => '',
+			'max_size' => '',
+			'mime_types' => 'pdf',
+		),
+	),
+	'location' => array(
+		array(
+			array(
+				'param' => 'post_type',
+				'operator' => '==',
+				'value' => 'neo_fos',
+			),
+		),
+	),
+	'menu_order' => 0,
+	'position' => 'normal',
+	'style' => 'default',
+	'label_placement' => 'top',
+	'instruction_placement' => 'label',
+	'hide_on_screen' => '',
+	'active' => true,
+	'description' => '',
+	'show_in_rest' => 1,
+));
+endif;
+
+/**
+ * Automatically set Neo Fos featured image from uploaded PDF
+ */
+add_action('acf/save_post', 'ekalexandria_sync_pdf_thumbnail', 20);
+function ekalexandria_sync_pdf_thumbnail( $post_id ) {
+    if ( get_post_type( $post_id ) !== 'neo_fos' ) return;
+    
+    $attachment_id = get_post_meta( $post_id, 'neo_fos_pdf_file', true );
+    if ( $attachment_id && is_numeric( $attachment_id ) ) {
+        set_post_thumbnail( $post_id, $attachment_id );
+    }
+}
+
+/**
+ * Shortcode to output Neo Fos PDF Link
+ */
+add_shortcode('neo_fos_pdf_link', 'ekalexandria_neo_fos_pdf_link_shortcode');
+function ekalexandria_neo_fos_pdf_link_shortcode() {
+    $post_id = get_the_ID();
+    $pdf_id = get_post_meta($post_id, 'neo_fos_pdf_file', true);
+    $pdf_url = '';
+    
+    if ( $pdf_id && is_numeric($pdf_id) ) {
+        $pdf_url = wp_get_attachment_url($pdf_id);
+    } else {
+        $legacy = get_post_meta($post_id, 'pdf_attachment_link', true);
+        if ($legacy && !is_numeric($legacy)) {
+            $pdf_url = $legacy;
+        }
+    }
+    
+    if ( $pdf_url ) {
+        return '<div class="wp-block-buttons" style="margin-top:2em;"><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="' . esc_url($pdf_url) . '" target="_blank">' . __('Λήψη / Προβολή PDF', 'ekalexandria-flagship') . '</a></div></div>';
+    }
+    return '';
+}
+
