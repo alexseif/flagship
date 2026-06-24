@@ -21,15 +21,15 @@
   - [x] `git commit -am "feat: register CPTs and extract legacy data"`
   - [x] `git checkout main && git merge feature/slice-2-cpts`
 
-- [ ] **Slice 3: Language-Specific Core Templates (Branch: `feature/slice-3-templates`)**
-  - [ ] `git checkout -b feature/slice-3-templates`
-  - [ ] Build language-specific page templates: `page-el.html`, `page-en.html`, `page-ar.html` (including their respective headers/footers).
-  - [ ] Build `single-neo_fos.html` template.
-  - [ ] Build `archive-neo_fos.html` template.
-  - [ ] Build `archive.html`, `search.html`, and `404.html` templates.
-  - [ ] Verify templates load without Block Editor errors.
-  - [ ] `git commit -am "feat: implement language-specific FSE page templates"`
-  - [ ] `git checkout main && git merge feature/slice-3-templates`
+- [x] **Slice 3: Language-Specific Core Templates (Branch: `feature/slice-3-templates`)**
+  - [x] `git checkout -b feature/slice-3-templates`
+  - [x] Build language-specific page templates: `page-el.html`, `page-en.html`, `page-ar.html` (including their respective headers/footers).
+  - [x] Build `single-neo_fos.html` template.
+  - [x] Build `archive-neo_fos.html` template.
+  - [x] Build `archive.html`, `search.html`, and `404.html` templates.
+  - [x] Verify templates load without Block Editor errors.
+  - [x] `git commit -am "feat: implement language-specific FSE page templates"`
+  - [x] `git checkout main && git merge feature/slice-3-templates`
 
 - [ ] **Slice 4: Dynamic Loops & Static Gallery Placeholders (Branch: `feature/slice-4-placeholders`)**
   - [ ] `git checkout -b feature/slice-4-placeholders`
