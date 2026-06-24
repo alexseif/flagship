@@ -1,197 +1,81 @@
-# Spec: Legacy WordPress Modernization for ekalexandria.org
+# Spec: Legacy WordPress Modernization for ekalexandria.org (Phase 2)
 
 ## 1. Objective
-* **Goal:** Modernize the legacy `ekalexandria.org` WordPress site (initially built 11 years ago, currently running WordPress core with local customizations) to run initially under **PHP 7.4** (to maintain legacy builder compatibility during content translation) and transition to a modern **PHP 8.3/8.4 (LTS)** environment once the layout is converted and legacy page builders are purged.
-* **Theme Rebuild (Single Repository):** Rebuild the frontend using a lightweight, native Gutenberg block theme called `ekalexandria-flagship` based on the style and standards of [flagship](https://github.com/alexseif/flagship). Avoid inline styling inside the HTML templates so as not to break the block editor, using clear HTML sections and PHP patterns/custom blocks where needed.
-* **Theme-Driven Customizations:** To maintain a clean and self-contained codebase, all custom functionalities (the `neo_fos` CPT registry, the custom RSS newsletter feed, and the Greek admin branding styles) will be written directly inside the theme under `inc/custom-features.php` (required by `functions.php`).
-* **Styling & Layout:** Use **SCSS** for styling, compiled into native stylesheets, following **mobile-first responsive design** practices.
-* **Multilingual & RTL:** Retain multilingual capabilities (Greek, English, and Arabic) and ensure full RTL (Right-to-Left) stylesheet support for the Arabic layout.
-* **Media Asset Optimization:** Proxy requests for missing local uploads dynamically to the live production site (`https://ekalexandria.org/wp-content/uploads/`) using Nginx configurations, avoiding the need to download the 50 GB uploads folder.
-* **Content Refactoring & Automation:** Convert the "Neo Fos" newsletter from a manual monthly PDF page upload into a Custom Post Type (CPT) inside the theme that automates Mailchimp updates (via custom RSS feed or draft campaign triggers).
-* **Local SSL & Staging Configuration:** Configure the local staging site `backstage.ekalexandria.org` with local SSL certificates generated via `openssl` to ensure secure connections and uniform production-ready URLs.
-* **Gated Plugin Deactivation:** Retain legacy plugins active during the setup and layout mapping phases. Only deactivate and delete them after the layout conversion is successfully mapped and blocks are generated.
-* **Version Control Strategy (Track A):** Maintain a lightweight Git repository **only** inside the custom theme folder `public/wp-content/themes/ekalexandria-flagship/` (initialized during implementation). This repository tracks theme stylesheets, layouts, custom functions, specification documentation (`SPEC.md`), and task checklists. All WordPress core files, third-party vendor plugins, database dumps, and private SSL keys are strictly excluded.
-* **Admin UX:** Brand the WP Admin dashboard and localize it to Greek for non-technical community administrators.
-
----
+* **Goal:** Complete the transition of `ekalexandria.org` to a native Gutenberg Full Site Editing (FSE) block theme (`ekalexandria-flagship`). Phase 2 focuses on recovering structural elements (menus, carousels, sub-navigation) lost during the WPBakery cleanup by utilizing the parallel original database (`db207080_eka`) as a read-only source of truth.
+* **Theme Lock-down:** Utilize `theme.json` to strictly enforce design constraints (fixed color palette, typography, margins, paddings) so administrators cannot break the design or go off-script.
+* **Content Extraction:** Extract specific legacy page content (like the "Αλεξανδρινός Ταχυδρόμος" newsletters) into dedicated Custom Post Types.
+* **URL Preservation:** Ensure absolute 1:1 parity with legacy URLs. Permalinks must remain identical to production, requiring proper rewrite rules if structures change.
+* **Database Sanitization (Deployment):** We will NOT maintain two separate databases in production. Instead, we will clean up the original production database (`db207080_eka`) by safely dropping useless tables leftover from discarded plugins, while retaining all historical news, links, and archives intact.
 
 ## 2. Tech Stack
 * **WordPress Core:** WordPress 6.x (latest stable)
-* **PHP Version:** PHP 7.4 (initial migration/cleanup phase) -> PHP 8.3 / 8.4 (LTS post-migration)
-* **Web Server:** Nginx (no Apache)
-* **Database:** MySQL 8.0+
-* **Version Control:** Git (tracking custom theme path only, setup during implementation)
-* **Local SSL:** Certificates generated via `openssl`
-* **Theme Standards:** Custom Block Theme `ekalexandria-flagship` (derived from `https://github.com/alexseif/flagship`)
-* **Styling Compiler:** Dart Sass (compiling `.scss` to `style.css` and `rtl.css`)
-* **Key Plugins:**
-  * **Retain & Update:** `polylang` (multilingual translation), `seo-by-rank-math` (SEO), `mailchimp` (newsletter coordination), `contact-form-7` (forms).
-  * **Retain during migration / Deactivate post-migration:** `js_composer` (WPBakery Builder), `LayerSlider`.
-  * **Delete:** `display-posts-shortcode`, `google-captcha`.
+* **Theme Standards:** Custom Block Theme `ekalexandria-flagship` using Full Site Editing (FSE).
+* **Styling Compiler:** SCSS compiled to native CSS (following WordPress official guidelines).
+* **FSE Configuration:** `theme.json` for global settings and styles.
+* **Parallel DB:** `db207080_eka` (used purely for querying legacy data to transform into the clean environment).
 
----
+## 3. Data Recovery & Implementation Requirements
+Based on the audit of missing elements post-cleanup, the following must be recovered and rebuilt using native Gutenberg blocks:
 
-## 3. Commands
-Full executable commands for setting up and managing the staging environment:
+### 3.1 Global Elements
+* **Top Bar:** Rebuild the top bar containing the site name and social media icons.
+* **Main Navigation:** Recover the main menu, its sub-menus, and Polylang translations.
 
-### Local SSL Generation (using openssl)
-```bash
-# Generate self-signed SSL key and cert for backstage.ekalexandria.org
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout backstage.key -out backstage.crt -subj "/CN=backstage.ekalexandria.org"
-```
+### 3.2 Carousels (Dynamic & Static)
+* **Dynamic Carousels:** Rebuild the 2 dynamic carousels (Homepage and News page) pulling latest posts/news.
+* **Static Carousels:** Rebuild static image carousels across the site.
+* *Implementation:* We will either integrate a lightweight Gutenberg carousel block plugin or develop a custom native block, ensuring no heavy legacy slider plugins (like RevSlider/LayerSlider) are used.
 
-### Local DB Import & Clean Setup
-```bash
-# Recreate local database
-wp db reset --yes --path=public --skip-plugins --skip-themes
+### 3.3 Page-Specific Recoveries
+* **Homepage:** Rebuild the 3 homepage widgets leading to *Υπηρεσίες*, *Ιστορία*, & *Ι.Ν. Ευαγγελισμού*.
+* **Sub-navigation Menus:** Restore the embedded in-page/sidebar sub-menus on nested pages including:
+  * `/el/ίδρυση/` and its sub-pages
+  * `/el/συνέδρια-ημερίδες/`
+  * `/el/κοιμητήρια/`
+* **Missing Media:** 
+  * Recover missing partner logos on `/el/διάφορα/σύνδεσμοι/`.
+  * Recover missing icons on `/el/ανακοινώσεις-νέα/ανακοινώσεις-εκα/`.
 
-# Import the existing local copy of the production database
-wp db import local_production.sql --path=public --skip-plugins --skip-themes
+### 3.4 Custom Post Type Extraction
+* **Αλεξανδρινός Ταχυδρόμος (Neo Fos):** Extract the newsletter content and register it as a dedicated Custom Post Type (`neo_fos`).
+* **Board Members:** Extract legacy board member data (previously utilizing the testimonials section) and reconstruct the single hidden Board Members page. The President's Welcome will remain a standard static page.
 
-# Export database backups using YYYY-MM-DD-HHMMSS-db_name format
-wp db export "$(date +%Y-%m-%d-%H%M%S)-db207080_eka.sql" --path=public --skip-plugins --skip-themes
+### 3.5 Full Site Editing (FSE) Templates
+To support the clean transition and the new CPTs, the following native HTML templates must be built:
+* `front-page.html`: The custom homepage layout.
+* `home.html` (or `index.html`): The news/blog archive index.
+* `page.html`: Default template for static pages.
+* `single.html`: Default template for single news/posts.
+* `archive.html`: Default template for category/tag archives.
+* `single-neo_fos.html` & `archive-neo_fos.html`: Templates for the Newsletter CPT.
+* `404.html`: Custom error page.
+* `search.html`: Search results template.
 
-# Search and replace production URLs for the local Nginx domain (using secure HTTPS scheme)
-wp search-replace "https://ekalexandria.org" "https://backstage.ekalexandria.org" --path=public --skip-plugins --skip-themes
-```
+## 4. Design Patterns & Code Style
+* **Separation of Concerns:** Strict division between PHP (functionality), HTML (structure/parts), JS (behavior), and SCSS (styling). Keep them as separate as possible.
+* **SCSS & theme.json Harmony:** SCSS is highly encouraged for complex, component-specific layouts (using BEM or modular patterns), while `theme.json` acts as the global design token registry (providing base CSS variables for palette, typography, and standard margins). They complement each other perfectly to keep the build lightweight.
+* **No Inline Styles:** HTML block templates (`.html`) must **NOT** contain inline `style=""` attributes. All styling must be handled via CSS classes and `theme.json`. This is critical to prevent the "This block contains unexpected or invalid content" recovery error in the Block Editor.
+* **Template Structure:** Prefer `.html` template parts. Only use block patterns and PHP when dynamic querying or backend functionality is required.
 
-### Theme Repository Git setup (cloning flagship)
-```bash
-# Create staging configuration folder inside public
-mkdir -p public/backstage/
+## 5. Boundaries & Constraints
+* **Always:** Maintain 1:1 URL structure parity.
+* **Always:** Keep all historical news and archives intact.
+* **Never:** Drop the original database in production. We will deploy by cleaning the existing production database (dropping legacy plugin tables) rather than overwriting it with a blank one.
+* **Never:** Break local builds.
+* **Never:** Write inline CSS in HTML block templates.
 
-# Clone flagship theme repository
-git clone https://github.com/alexseif/flagship.git public/wp-content/themes/ekalexandria-flagship
+## 6. Deployment Strategy (Digital Ocean Production)
+* **Hosting Environment:** Ubuntu Server, Nginx, PHP-FPM 8.x.
+* **Mechanism:** 
+  1. The new `ekalexandria-flagship` theme is deployed via Git pull on the server.
+  2. The production database (`db207080_eka`) is sanitized **in place**. Legacy plugins (WPBakery, LayerSlider) will be officially deleted via WP-CLI, triggering their native uninstall routines to safely remove associated tables, rather than risking manual SQL drops.
+  3. Caches (Nginx FastCGI / Redis / WP Rocket) are purged.
 
-# Go to the theme directory
-cd public/wp-content/themes/ekalexandria-flagship
-
-# Move spec and tasks from project root into theme folder
-mv ../../../SPEC.md .
-mv ../../../tasks/ .
-
-# Point git remote to your staging repository or update remote url
-git remote set-url origin [your-repository-url]
-```
-
-### SCSS Compilation (Theme Directory)
-```bash
-# Compile theme stylesheets from SCSS sources
-npm run build:css
-```
-
-### Plugin Operations (Executed post-migration)
-```bash
-# Deactivate and delete bloated/legacy plugins ONLY AFTER content parsing is complete
-wp plugin deactivate js_composer LayerSlider --path=public --skip-plugins --skip-themes
-wp plugin delete js_composer LayerSlider --path=public --skip-plugins --skip-themes
-```
-
-### Web Server Control (Nginx)
-```bash
-# Verify Nginx configuration syntax
-sudo nginx -t
-
-# Reload Nginx server blocks
-sudo systemctl reload nginx
-```
-
----
-
-## 4. Project Structure (Staging Context)
-Once the theme is cloned and documents are moved inside the repository in the implementation phase, files will reside in the following locations:
-
-```
-public/
-  ├── backstage/                        → Staging configurations (Nginx & SSL keys)
-  │   ├── ssl/                          → Staging SSL certificate storage (generated by openssl)
-  │   │   ├── backstage.key
-  │   │   └── backstage.crt
-  │   └── backstage.ekalexandria.org.conf → Staging Nginx configuration template (RTL & upload proxy)
-  ├── wp-content/
-  │   ├── themes/
-  │   │   └── ekalexandria-flagship/    → Theme folder under Git control
-  │   │       ├── SPEC.md               → Specification document
-  │   │       ├── tasks/                → Development roadmaps & task lists
-  │   │       │   ├── plan.md
-  │   │       │   └── todo.md
-  │   │       ├── package.json          → SCSS build scripts
-  │   │       ├── theme.json            → Color palette, layout, typography (timing pending design approval)
-  │   │       ├── functions.php         → Core theme setups & RTL stylesheet queues
-  │   │       ├── style.css             → Compiled styling
-  │   │       ├── rtl.css               → Compiled RTL stylesheet
-  │   │       ├── inc/
-  │   │       │   └── custom-features.php → CPT registry, custom feed, and admin branding styling
-  │   │       ├── sass/                 → SCSS source files
-  │   │       │   ├── style.scss
-  │   │       │   └── rtl.scss
-  │   │       ├── templates/            → Home, Archive, Single, Page templates
-  │   │       └── parts/                → Header, Footer, and template components
-```
-
----
-
-## 5. Code Style
-* **PHP:** Strictly conform to WordPress PHP coding standards. Prefix all custom functions and namespaces with `eka_` to avoid conflicts.
-* **No Inline Styles:** HTML files, block patterns, and template parts must not use inline `style="..."` attributes. Instead, layout structure should rely on semantic class names, structural Gutenberg blocks, and SCSS stylesheet definitions.
-* **CSS & RTL:** Compiled SCSS with separate standard layout definitions and `rtl.css` compiled targets.
-* **Nginx Configuration:** Standardize proxy pass configurations inside server blocks with comments explaining the bypass targets.
-
-*Sample custom CPT registry inside theme:*
-```php
-// inc/custom-features.php
-function eka_register_neofos_cpt() {
-    $args = array(
-        'label'        => __('Νέο Φως (Newsletter)', 'ekalexandria'),
-        'public'       => true,
-        'has_archive'  => true,
-        'supports'     => array('title', 'editor', 'thumbnail', 'custom-fields'),
-        'show_in_rest' => true, // Enables Gutenberg block editor
-        'menu_icon'    => 'dashicons-email-alt',
-    );
-    register_post_type('neo_fos', $args);
-}
-add_action('init', 'eka_register_neofos_cpt');
-```
-
----
-
-## 6. Testing & Verification Strategy
-Before the migration is marked as successful, the following checks must pass:
-* **Dynamic Proxy Pass Resolution:** 
-  1. Retrieve an active attachment filepath from the database (e.g. `wp db query "SELECT meta_value FROM wp_postmeta WHERE meta_key='_wp_attached_file' LIMIT 1"`).
-  2. Request that specific path under the staging URL `https://backstage.ekalexandria.org/wp-content/uploads/` via Nginx.
-  3. Ensure it transparently falls back and renders the asset from `https://ekalexandria.org/wp-content/uploads/` with status code 200.
-* **SSL Validation:** Ensure the local site resolves securely at `https://backstage.ekalexandria.org` using certificates generated by openssl.
-* **RTL layout rendering:** Accessing Arabic page templates must load with `dir="rtl"` in the root HTML tag and mirror elements cleanly.
-* **WPBakery Code Conversion:** The Home page ("Αρχική", ID `13236`) and News page ("Νέα", ID `8934`) must render cleanly using native Gutenberg blocks, removing all traces of WPBakery `[vc_*]` shortcodes.
-* **Neo Fos RSS Automated Feed:** Accessing `https://backstage.ekalexandria.org/feed/neo-fos/` must return valid XML containing the latest Custom Post Type entries with PDF attachment mappings, confirming Mailchimp integration compatibility.
-* **Lighthouse Performance Targets:**
-  * **Desktop:** Mobile performance score `>= 80`, Desktop performance score `>= 95`.
-  * **SEO & Accessibility:** Scores `>= 90`.
-
----
-
-## 7. Boundaries
-* **Always:**
-  * Keep backups of database exports outside the public directories, named with the exact timestamped pattern `YYYY-MM-DD-HHMMSS-db_name.sql`.
-  * Execute data operations and updates via WP-CLI with `--skip-plugins --skip-themes` to avoid PHP runtime exceptions from obsolete active code.
-* **Ask First:**
-  * Modifying shared server Nginx permissions.
-  * Any database table adjustments beyond standard WordPress Core requirements.
-* **Never:**
-  * Connect the staging site configuration directly to the live production database.
-  * Download or copy the live 50 GB `/wp-content/uploads/` directory to local storage.
-  * Use inline HTML style declarations inside custom block patterns.
-  * Deactivate or delete the legacy page builders before content conversion mappings are generated.
-  * Commit third-party WordPress vendor files or database SQL files to the Git history.
-
----
-
-## 8. Success Criteria
-1. The local staging server `backstage.ekalexandria.org` successfully loads under PHP 7.4 (initially) and then PHP 8.3/8.4 over HTTPS (using openssl certs) and runs on the latest WordPress core release.
-2. The custom block theme `ekalexandria-flagship` controls design styles dynamically using `theme.json` without layout builder bloat.
-3. Legacy slider contents (from LayerSlider ID 6) on the Home page and News page are successfully recreated using native Gutenberg Cover/Slider blocks.
-4. The admin panel is fully localized to Greek and customized with community branding.
-5. The "Neo Fos" Custom Post Type works seamlessly, allowing PDF uploads and rendering cleanly for users.
-6. The repository contains only the clean custom files under version control.
+## 7. Success Criteria
+1. **Performance & SEO:** The site achieves a mobile-first responsive layout, lightweight loading, a high PageSpeed score (90+), and excellent natural SEO.
+2. Site navigates seamlessly with all original menus, top bars, and in-page sub-menus working.
+3. Homepage and News carousels operate dynamically using native blocks without bloated plugins.
+4. Missing logos and icons are mapped back into their respective pages.
+5. `Αλεξανδρινός Ταχυδρόμος` functions as a clean CPT, and the Board Members / President's Welcome pages are fully restored and visible.
+6. The Block Editor loads all pages without "Block Recovery" validation errors.
+7. Local deployment matches production URLs perfectly.

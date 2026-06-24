@@ -1,53 +1,99 @@
-# Implementation Plan: Legacy WordPress Modernization for ekalexandria.org
+# Ekalexandria Phase 2: Modernization Plan
 
-## Overview
-This plan outlines the systematic modernization of `ekalexandria.org` on a local staging environment `https://backstage.ekalexandria.org` running initially under **PHP 7.4** (transitioning to **PHP 8.3/8.4 (LTS)** after legacy page builder plugin deactivation) and **WordPress 6.x**. The project replaces the legacy WPBakery Builder (`js_composer`) and `LayerSlider` with a custom block theme named `ekalexandria-flagship` (cloned from [flagship](https://github.com/alexseif/flagship)). The custom layouts, custom post type `neo_fos`, custom RSS feeds, and admin panel overrides are coded directly inside the theme directory (`ekalexandria-flagship`) to maintain a single self-contained repository under git control. Media uploads are dynamically proxied via Nginx to bypass the 50 GB local download, and local SSL is generated using `openssl`.
+## Git Workflow Protocol
+To maintain a healthy repository and isolate changes, every slice will strictly follow this workflow:
+1. **Branching:** Create a new feature branch for each slice (e.g., `feature/slice-1-navigation`).
+2. **Implementation:** Small, logical commits per task within the slice (e.g., `feat: build native top bar`).
+3. **Verification:** Run local checks (linting, visual check) before finalizing the slice.
+4. **Merge:** Merge the feature branch into `main` (or the primary working branch) at each Checkpoint.
 
----
-
-## Architecture Decisions
-1. **Theme-Driven Customizations:** To ensure simple deployment and clean tracking, CPT registrations, custom RSS templates, and admin styles are written in `inc/custom-features.php` inside the theme folder, eliminating the need for a separate custom plugin.
-2. **Separation of Styling (SCSS) and Block Structure:** No styles will be hardcoded inside HTML block templates or inline properties. Design styles will be handled entirely via compiled SCSS files (`style.css` and `rtl.css` for multilingual support) to ensure block editor integrity.
-3. **Reverse Proxying for Media Uploads:** To bypass downloading the 50 GB uploads folder from production, the local Nginx configuration will intercept requests to `wp-content/uploads/` and dynamically proxy missing assets to the live site.
-4. **No-API Mailchimp Integration:** Mailchimp will query a dedicated RSS feed exposed for the `neo_fos` CPT (e.g. `https://backstage.ekalexandria.org/feed/neo-fos/`). This avoids maintaining fragile Mailchimp API tokens in the legacy database.
-5. **Local SSL Setup:** Running local staging strictly over HTTPS (via `openssl` self-signed certs) prevents mixed content issues and ensures proper loading of Gutenberg blocks and REST resources.
-6. **Project-Scoped Agent Guidelines:** A guiding principle rule file [AGENTS.md](file:///var/www/ekalexandria.org/.agents/AGENTS.md) is created to keep all future AI subagents aligned on these architectural decisions.
-
----
-
-## Data Migration & Integration Strategy
-
-### 1. Advanced Custom Fields (ACF) Integration
-To properly structure PDF attachments for the **Neo Fos** (Αλεξανδρινός Ταχυδρόμος) archive, we will install ACF and define a PHP-based field group containing `pdf_attachment_link`. This replaces unstructured links with filterable metadata.
-
-### 2. Pre-Cleanup Custom Migrations
-Before performing destructive database cleanups on legacy `wp_posts` (like removing WPBakery `[vc_*]` tags), we execute targeted extraction scripts:
-- **Neo Fos Extraction:** Parse the single page "αλεξανδρινός-ταχυδρόμος" to extract all `<a href="...pdf">` anchors, creating individual `neo_fos` Custom Post Types for each issue.
-- **Board Members:** Extract old `testimonial` posts and migrate them into the new `board_member` Custom Post Type.
-- **Revolution Slider Conversions:** Locate and replace `[rev_slider]` shortcodes in active pages (e.g., cemeteries-maintenance) with native Gutenberg blocks (e.g., `core/cover` or `core/gallery`).
-
-### 3. Polylang Compatibility (Language Assignments)
-Since Polylang is strictly managing language routes (`/el/` and `/ar/`), any programmatically created Custom Post Type (like `neo_fos` or `board_member`) MUST be assigned a default language (Greek) during migration. Otherwise, they will be orphaned in the database and cause 404s on archive and RSS feed routes.
-
-### 4. FSE Template Hierarchy Reconstruction
-The cloned `flagship` theme is a minimal baseline. To fully support the complex layout required by Polylang (static homepages, distinct blog archives, custom post type singles), we must reconstruct a standard WordPress Full Site Editing template hierarchy:
-- `front-page.html`: The static homepage template leveraging Gutenberg Post Content to dynamically output the Greek or Arabic page contents.
-- `home.html`: The blog index leveraging the Query Loop block inherited from the global query.
-- `single.html` & `page.html`: Universal single-view wrappers.
-- `parts/header.html`: Universal header containing a dynamic Navigation Menu block (swapped automatically by Polylang) and a custom Language Switcher.
+## Token Optimization Protocol
+To minimize LLM token usage and reduce costs:
+1. **Targeted Context:** Do not re-read large files constantly. Rely on this `plan.md` and specific task files.
+2. **Atomic Reads:** Use specific `view_file` calls with line numbers rather than reading entire directories.
+3. **Sequential Execution:** Close out one task completely before opening files for the next.
+4. **Pragmatic Implementation:** Prefer native Gutenberg blocks and straightforward HTML over complex programmatic React/PHP solutions whenever possible.
 
 ---
 
-## Risks and Mitigations
+## Architectural Decisions (Aligned with Roadmap)
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Nginx reverse proxy CORS block | Medium | Configure headers inside the proxy block to allow cross-origin requests from `https://ekalexandria.org` to staging. |
-| Incomplete WPBakery conversions | High | Write a PHP database parser that replaces standard `[vc_*]` grid tags with plain layout blocks, and test it incrementally on single draft pages before updating the live database table. |
-| PHP 8.3 Fatal Errors in old plugins | High | Run PHPStan or quick WP-CLI syntax audits. Disable offending secondary legacy plugins and update core plugins. |
-| RTL styles breaking layouts | Medium | Separate mobile-first base SCSS from layout adjustments, using dedicated `rtl.scss` structures loaded only when Polylang detects RTL locales (Arabic). |
+Based on the Project Roadmap and the goal to optimize LLM tokens and complexity, we have finalized the following approaches:
+
+1. **Straightforward Placeholder Strategy:** To save tokens and avoid over-engineering, complex interactive elements (like Carousels and nested Sub-navigation menus) will **NOT** be custom-coded. We will insert standard, native Gutenberg blocks (e.g., `core/gallery`, `core/navigation`, `core/columns`) into the FSE templates as structural placeholders. The user will manually configure and populate the final content in the WP Admin.
+2. **Language-Specific FSE Templates:** To dramatically simplify multilingual routing and avoid complex programmatic Polylang logic, we will build distinct FSE templates and template parts for each language:
+   *   **Template Parts:** `header-el.html`, `header-en.html`, `header-ar.html` (and matching footers).
+   *   **Templates:** `page-el.html`, `page-en.html`, `page-ar.html`.
+   *   *Workflow:* The user will simply assign the correct language template to the respective page in the WordPress editor.
 
 ---
 
-## Open Questions
-* **RTL styles source:** Do we have existing style elements from Betheme we must map to `ekalexandria-flagship`'s RTL layouts, or do we construct them cleanly from scratch?
+## Dependency Graph & Vertical Slices
+
+```mermaid
+graph TD
+    A[Slice 1: Multilingual Headers] --> C[Slice 3: Language-Specific Templates]
+    B[Slice 2: CPT Data Model] --> C
+    C --> D[Slice 4: Block Placeholders]
+    D --> E[Slice 5: Page Recoveries]
+    E --> F[Slice 6: Sanitization]
+```
+
+### Slice 1: Global Elements & Multilingual Headers
+**Branch:** `feature/slice-1-navigation`
+*   **Tasks:**
+    *   Create language-specific header parts (`header-el`, `header-en`, `header-ar`).
+    *   Create language-specific footer parts (`footer-el`, `footer-en`, `footer-ar`).
+    *   Add basic native Navigation block placeholders in the headers.
+
+### Slice 2: Custom Post Types (Data Model)
+**Branch:** `feature/slice-2-cpts`
+*   **Tasks:**
+    *   Register `neo_fos` CPT.
+    *   Register Board Members CPT/Meta.
+    *   Extract legacy data via CLI/Script.
+
+### Slice 3: Language-Specific Core Templates
+**Branch:** `feature/slice-3-templates`
+*   **Tasks:**
+    *   Build language-specific page templates (`page-el.html`, `page-en.html`, `page-ar.html`) that call their respective headers and footers.
+    *   Build `single-neo_fos.html`, `archive-neo_fos.html`.
+    *   Build `archive.html`, `search.html`, `404.html`.
+
+### Slice 4: Placeholders for Interactive Blocks
+**Branch:** `feature/slice-4-placeholders`
+*   **Tasks:**
+    *   Insert native Gutenberg placeholder blocks for the Homepage Carousel.
+    *   Insert native Gutenberg placeholder blocks for the News Page Carousel.
+    *   Insert placeholders for static image carousels across required templates.
+
+### Slice 5: Homepage & Specific Page Recoveries
+**Branch:** `feature/slice-5-page-recovery`
+*   **Tasks:**
+    *   Rebuild homepage widgets using native columns in `front-page.html`.
+    *   Insert native Navigation placeholders for nested sub-menus (e.g., `/el/ίδρυση/`).
+    *   Restore missing logos and icons on specific pages natively.
+
+### Slice 6: Deployment & Sanitization Prep
+**Branch:** `feature/slice-6-sanitization`
+*   **Tasks:**
+    *   Write WP-CLI cleanup script for legacy tables.
+    *   Test cleanup locally.
+
+---
+
+## Estimated Token Cost & Analysis
+
+By utilizing the "Placeholder Strategy" and "Language-Specific Templates", we significantly reduce the complexity and token output required for Slices 3, 4, and 5.
+
+| Phase | Est. Input Tokens | Est. Output Tokens | Approx. Cost ($) |
+| :--- | :--- | :--- | :--- |
+| Slice 1 (Headers/Footers) | 15,000 | 1,500 | $0.07 |
+| Slice 2 (CPTs) | 20,000 | 3,000 | $0.11 |
+| Slice 3 (Language Templates) | 20,000 | 2,500 | $0.10 |
+| Slice 4 (Placeholders) | 15,000 | 1,000 | $0.06 |
+| Slice 5 (Page Recovery) | 20,000 | 2,000 | $0.09 |
+| Slice 6 (Deployment) | 15,000 | 1,500 | $0.07 |
+| **Total** | **105,000** | **11,500** | **~$0.50** |
+
+*Note: Pricing assumes roughly $3.00 per 1M input tokens and $15.00 per 1M output tokens using industry-standard AI coding models. This optimized plan halves the original token estimate.*
