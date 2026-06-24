@@ -35,7 +35,7 @@
   - [ ] `git checkout -b feature/slice-4-placeholders`
   - [ ] Implement native Gutenberg dynamic Query Loop block for the Homepage to pull the latest 5 News/Ανακοινώσεις posts.
   - [ ] Implement the same dynamic Query Loop block for the News Page.
-  - [ ] Insert native Gutenberg placeholder blocks (e.g., `core/gallery`) for specific page inner-sliders (Staff, Greek Club, Cemeteries, Music Museum, Science Museum, Cemeteries Conservation).
+  - [ ] Insert native Gutenberg `core/gallery` blocks programmatically populated with the exact Image IDs listed in `legacy_data.md` for the inner-page galleries (Staff, Greek Club, Cemeteries, Music Museum, Science Museum, Cemeteries Conservation).
   - [ ] `git commit -am "feat: implement dynamic news loops and static gallery placeholders"`
   - [ ] `git checkout main && git merge feature/slice-4-placeholders`
 

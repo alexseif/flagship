@@ -41,11 +41,11 @@ When adding native Gutenberg Carousel/Gallery blocks, use these references for t
 *   **Homepage & News Page:** These do *not* use a static slider. They use a **dynamic Query Loop block** (or Carousel) that pulls the latest 5 posts from the "News" / "Ανακοινώσεις" category.
 
 ### Specific Inner Pages (Static Galleries)
-The following pages require a native slider placeholder block (like `core/gallery`). The legacy slider ID is provided so the client can find the original media from the old LayerSlider/RevSlider admin panel to upload into the new block.
+The following pages require a native slider placeholder block (like `core/gallery`). We have extracted the original media IDs so the builder agent can programmatically generate the Gutenberg gallery blocks using these IDs.
 
-1.  **Staff / Στελέχωση / العاملين:** Placeholder for `staff` gallery.
-2.  **Community Lounge / Κοινοτικό Εντευκτήριο / استراحة الجمعية:** Placeholder for `GREEK-CLUB` gallery.
-3.  **Cemeteries / Κοιμητήρια / المقابر:** Placeholder for `Κοιμητήρια` gallery.
-4.  **Cemeteries Conservation / Συντήρηση Κοιμητηρίων / المقابر:** Placeholder for `cemeteries-maintenance` gallery.
-5.  **Music Museum / Μουσείο Μουσικής / متحف موسيقي:** Placeholder for `music-museum` gallery.
-6.  **Science Museum / Μουσείο και Εργαστήριο Θετικών Επιστημών / متحف ومختبر:** Placeholder for `science-museum` gallery.
+1.  **Staff / Στελέχωση / العاملين:** Gallery Block (Requires manual media import).
+2.  **Community Lounge / Κοινοτικό Εντευκτήριο:** Gallery Block (Image IDs: `10328`, plus manual additions).
+3.  **Cemeteries / Κοιμητήρια:** Gallery Block (Image IDs: `10329, 7667, 7668, 7669, 7670, 7671, 7672, 7673`).
+4.  **Cemeteries Conservation / Συντήρηση Κοιμητηρίων:** Gallery Block (Image IDs: `7935, 7936, 7937, 7938, 7939, 7940, 7941, 7942`).
+5.  **Music Museum / Μουσείο Μουσικής:** Gallery Block (Image IDs: `7821, 7822, 7823`).
+6.  **Science Museum / Μουσείο ... Φυσικής:** Gallery Block (Image IDs: `7813, 7814, 7815`).
