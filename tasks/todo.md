@@ -12,14 +12,14 @@
   - [x] `git commit -am "feat: implement language-specific headers and footers with menu placeholders"`
   - [x] `git checkout main && git merge feature/slice-1-navigation`
 
-- [ ] **Slice 2: Custom Post Types (Branch: `feature/slice-2-cpts`)**
-  - [ ] `git checkout -b feature/slice-2-cpts`
-  - [ ] Register `neo_fos` CPT for newsletters.
-  - [ ] Create and run script to extract legacy Neo Fos content.
-  - [ ] Register Board Members CPT/structure and extract data.
-  - [ ] Verify CPTs and data in WP Admin.
-  - [ ] `git commit -am "feat: register CPTs and extract legacy data"`
-  - [ ] `git checkout main && git merge feature/slice-2-cpts`
+- [x] **Slice 2: Custom Post Types (Branch: `feature/slice-2-cpts`)**
+  - [x] `git checkout -b feature/slice-2-cpts`
+  - [x] Register `neo_fos` CPT for newsletters.
+  - [x] Create and run script to extract legacy Neo Fos content.
+  - [x] Register Board Members CPT/structure and extract data.
+  - [x] Verify CPTs and data in WP Admin.
+  - [x] `git commit -am "feat: register CPTs and extract legacy data"`
+  - [x] `git checkout main && git merge feature/slice-2-cpts`
 
 - [ ] **Slice 3: Language-Specific Core Templates (Branch: `feature/slice-3-templates`)**
   - [ ] `git checkout -b feature/slice-3-templates`
