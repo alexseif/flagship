@@ -48,9 +48,9 @@
   - [x] `git commit -am "feat: recover specific page widgets and in-page nested menus"`
   - [x] `git checkout main && git merge feature/slice-5-page-recovery`
 
-- [ ] **Slice 6: Deployment Prep (Branch: `feature/slice-6-sanitization`)**
-  - [ ] `git checkout -b feature/slice-6-sanitization`
-  - [ ] Write WP-CLI cleanup script for legacy plugin tables (WPBakery, LayerSlider, RevSlider).
-  - [ ] Test cleanup script safely on local staging database.
-  - [ ] `git commit -am "chore: create and test DB sanitization scripts"`
-  - [ ] `git checkout main && git merge feature/slice-6-sanitization`
+- [x] **Slice 6: Deployment Prep (Branch: `feature/slice-6-sanitization`)**
+  - [x] `git checkout -b feature/slice-6-sanitization`
+  - [x] Write WP-CLI cleanup script for legacy plugin tables (WPBakery, LayerSlider, RevSlider).
+  - [x] Test cleanup script safely on local staging database.
+  - [x] `git commit -am "chore: create and test DB sanitization scripts"`
+  - [x] `git checkout main && git merge feature/slice-6-sanitization`
