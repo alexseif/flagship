@@ -2,15 +2,15 @@
 
 *Reference: See `tasks/legacy_data.md` for exact naming and ID mapping of menus and sliders.*
 
-- [ ] **Slice 1: Global Elements & Multilingual Headers (Branch: `feature/slice-1-navigation`)**
-  - [ ] `git checkout -b feature/slice-1-navigation`
-  - [ ] Create language-specific header parts: `header-el.html`, `header-en.html`, `header-ar.html`.
-  - [ ] Create language-specific footer parts: `footer-el.html`, `footer-en.html`, `footer-ar.html`.
-  - [ ] Add native Navigation block placeholders to the headers mapped to the extracted Main Menus (e.g., "Main Greek Menu", "Main English Menu").
-  - [ ] Add native Navigation block placeholder to the Greek footer mapped to "Footer Greek Menu".
-  - [ ] Verify visual parity and structure.
-  - [ ] `git commit -am "feat: implement language-specific headers and footers with menu placeholders"`
-  - [ ] `git checkout main && git merge feature/slice-1-navigation`
+- [x] **Slice 1: Global Elements & Multilingual Headers (Branch: `feature/slice-1-navigation`)**
+  - [x] `git checkout -b feature/slice-1-navigation`
+  - [x] Create language-specific header parts: `header-el.html`, `header-en.html`, `header-ar.html`.
+  - [x] Create language-specific footer parts: `footer-el.html`, `footer-en.html`, `footer-ar.html`.
+  - [x] Add native Navigation block placeholders to the headers mapped to the extracted Main Menus (e.g., "Main Greek Menu", "Main English Menu").
+  - [x] Add native Navigation block placeholder to the Greek footer mapped to "Footer Greek Menu".
+  - [x] Verify visual parity and structure.
+  - [x] `git commit -am "feat: implement language-specific headers and footers with menu placeholders"`
+  - [x] `git checkout main && git merge feature/slice-1-navigation`
 
 - [ ] **Slice 2: Custom Post Types (Branch: `feature/slice-2-cpts`)**
   - [ ] `git checkout -b feature/slice-2-cpts`
