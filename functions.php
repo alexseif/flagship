@@ -3,6 +3,11 @@
  * Flagship Theme Functions
  */
 
+function flagship_theme_setup() {
+    add_theme_support('post-thumbnails');
+}
+add_action('after_setup_theme', 'flagship_theme_setup');
+
 function flagship_enqueue_assets() {
     // Enqueue Theme Components CSS (Assuming SCSS is compiled here)
     wp_enqueue_style(
