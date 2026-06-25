@@ -96,11 +96,29 @@ add_action('acf/init', function() {
     endif;
 });
 
-// Exclude Tachydromos from Polylang
+// Register Board Member CPT
+add_action('init', function() {
+    register_post_type('board_member', [
+        'labels' => [
+            'name' => 'Board Members',
+            'singular_name' => 'Board Member',
+            'menu_name' => 'Board Members',
+        ],
+        'public' => true,
+        'has_archive' => false,
+        'show_in_rest' => true,
+        'supports' => ['title', 'editor', 'thumbnail', 'page-attributes'],
+        'rewrite' => ['slug' => 'board-members', 'with_front' => false],
+        'menu_icon' => 'dashicons-groups',
+    ]);
+});
+
+// Exclude Tachydromos and include Board Member for Polylang
 add_filter('pll_get_post_types', function($post_types, $is_settings) {
     if (isset($post_types['alx_tachydromos'])) {
         unset($post_types['alx_tachydromos']);
     }
+    $post_types['board_member'] = 'board_member';
     return $post_types;
 }, 10, 2);
 

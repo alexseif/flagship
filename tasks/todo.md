@@ -39,12 +39,12 @@
 - [ ] Verify the PDF Image Generator plugin auto-generates thumbnails upon new PDF uploads in the editor.
 
 ## Phase 3: Board Members
-- [ ] **Task 3.1: Registration & Configuration**
+- [x] **Task 3.1: Registration & Configuration**
   - Register `board_member` CPT.
   - Expose to Polylang via `pll_get_post_types` hook.
   - *Acceptance:* CPT appears in admin; translation icons visible in listing.
-  - [ ] **Verify**
-  - [ ] **Commit**
+  - [x] **Verify**
+  - [x] **Commit**
 - [ ] **Task 3.2: Migration CLI Command**
   - Create `wp eka migrate-board` WP-CLI command in `inc/cli-commands.php`.
   - Read legacy "Στελέχωση" grids from `db207080_eka`.
