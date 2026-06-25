@@ -20,7 +20,7 @@
 - **Conditional Logic:** Show only if post_type == `alexandrinos_tachydromos`.
 
 ### Polylang Integration
-- Expose `alexandrinos_tachydromos` to Polylang via `pll_get_post_types` filter so each issue can be tied to its Arabic/English translation natively.
+- **Not Translatable:** `alexandrinos_tachydromos` is a universal archive (solely Greek). It must NOT be exposed to Polylang. Do not add it to `pll_get_post_types`.
 
 ### FSE Templates
 - `archive-alexandrinos_tachydromos.html`: Will use a `core/query` block. Must include a custom shortcode `[alexandrinos_archive_filter]` for Month/Year `<select>` dropdown filtering.
