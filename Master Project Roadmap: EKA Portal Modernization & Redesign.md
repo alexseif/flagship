@@ -11,19 +11,19 @@ This document outlines the step-by-step master plan to modernize the digital inf
     *   Set up a localized Nginx web server and database engine (MariaDB/MySQL) on the local workstation.
 *   [x] **Task 1.2: Database Snapshot Extraction**
     *   Export and download the core 400+ MB database ledger from the live server.
-*   [ ] **Task 1.3: Media Storage Routing (The 60GB Footprint Optimization)**
+*   [x] **Task 1.3: Media Storage Routing (The 60GB Footprint Optimization)**
     *   Configure a specialized Nginx network proxy hack. This allows the local test site to read the massive 60+ GB media library directly from the live web without copying files locally, saving significant disk space and setup time.
-*   [ ] **Task 1.4: Local Domain Mapping (`backstage.ekalexandria.org`)**
+*   [x] **Task 1.4: Local Domain Mapping (`backstage.ekalexandria.org`)**
     *   Route the staging domain locally on the workstation and run initial database search-and-replace scripts to ensure all internal links function correctly in isolation.
 
 ## Phase 2: Technical Debt Audit & Plugin Rationalization
 *Objective: Identify obsolete code structures and eliminate heavy legacy plugins that degrade performance or cause active 500 server errors.*
 
-*   [ ] **Task 2.1: Legacy Plugin Analysis**
+*   [x] **Task 2.1: Legacy Plugin Analysis**
     *   Audit all currently active plugins to trace functionality, performance bottlenecks, and structural compatibility with modern PHP standards.
-*   [ ] **Task 2.2: Decommissioning Ledger (The "Throw-Away" List)**
+*   [x] **Task 2.2: Decommissioning Ledger (The "Throw-Away" List)**
     *   Isolate bloated layout builders, legacy sliders, and redundant tracking utilities that can be permanently removed or replaced by native, lightweight block elements.
-*   [ ] **Task 2.3: Core Feature Extraction Mapping**
+*   [x] **Task 2.3: Core Feature Extraction Mapping**
     *   Document the unique, essential behaviors of the plugins marked for removal (e.g., custom data fields or multilingual logic) to prepare for clean reimplementation.
 
 ## Phase 3: Visual Design Modernization & Approvals
@@ -45,14 +45,16 @@ This document outlines the step-by-step master plan to modernize the digital inf
     *   Initialize a completely blank, lightweight, block-native theme architecture (`theme.json`) completely independent of legacy visual builders.
 *   [ ] **Task 4.2: SCSS Style Architecture Setup**
     *   Establish a clean, compiled style ecosystem (SCSS) to govern typography scales, spacing tokens, and color profiles globally without inline code bloat.
-*   [ ] **Task 4.3: High-Performance Page Templates**
+*   [x] **Task 4.3: High-Performance Page Templates**
     *   Translate approved visual designs into optimized block layouts for the homepage, inner content, and operational views.
 
 ## Phase 5: Re-Engineering Missing Features & Integrations
 *Objective: Program clean, native replacements for the essential features of the legacy plugins we threw away.*
 
-*   [ ] **Task 5.1: Tachydrómos Archive Engine Customization**
+*   [x] **Task 5.1: Tachydrómos Archive Engine Customization**
     *   Code clean, fast database filters and sorting functions to display the newsletter archive natively.
+*   [x] **Task 5.2: Board of Directors Engineering**
+    *   Build custom FSE page templates and queries to dynamically map and display translated board members across three languages natively.
 *   [ ] **Task 5.2: News Section Optimization**
     *   Build optimized query loops to surface high-priority community news dynamically.
 *   [ ] **Task 5.3: Modern Secure Token Setup (Mailchimp Engine)**
@@ -63,8 +65,8 @@ This document outlines the step-by-step master plan to modernize the digital inf
 ## Phase 6: Full Data Migration & System Calibration
 *Objective: Merge the historical database content with the brand-new theme and modern database tables.*
 
-*   [ ] **Task 6.1: Legacy Data Transformation Scripting**
-    *   Execute targeted script operations to map old post formats into clean, standardized block patterns.
+*   [x] **Task 6.1: Legacy Data Transformation Scripting**
+    *   Execute targeted script operations to map old post formats into clean, standardized block patterns (e.g., migrating legacy shortcode grids into native Gutenberg blocks and CPTs for Newsletters and Board Members).
 *   [ ] **Task 6.2: Database Cleanup & Schema Alignment**
     *   Purge historical plugin remnants, clear junk metadata, and optimize database indexing across the 400+ MB file ledger to stabilize table performance.
 *   [ ] **Task 6.3: Multi-Language Validation Drill**
