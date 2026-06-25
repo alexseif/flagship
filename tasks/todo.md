@@ -45,7 +45,7 @@
   - *Acceptance:* CPT appears in admin; translation icons visible in listing.
   - [x] **Verify**
   - [x] **Commit**
-- [ ] **Task 3.2: Migration CLI Command**
+- [x] **Task 3.2: Migration CLI Command**
   - Create `wp eka migrate-board` WP-CLI command in `inc/cli-commands.php`.
   - Read legacy "Στελέχωση" grids from `db207080_eka`.
   - Extract member data and attach `_thumbnail_id`.
@@ -54,8 +54,8 @@
   - Leave ambiguous relations unlinked for manual resolution.
   - Insert idempotent records.
   - *Acceptance:* Command runs successfully; members appear in backend with correct Greek canonical and linked translations.
-  - [ ] **Verify**
-  - [ ] **Commit**
+  - [x] **Verify**
+  - [x] **Commit**
 
 ## Checkpoint: Final Review
 - [ ] Verify Board Members output in existing query loops.
