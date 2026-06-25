@@ -15,12 +15,12 @@
   - *Acceptance:* CPT appears in admin sidebar; Gutenberg editor works; ACF field visible on edit screen; URL resolves correctly.
   - [x] **Verify**
   - [x] **Commit**
-- [ ] **Task 2.2: FSE Templates**
+- [x] **Task 2.2: FSE Templates**
   - Create `templates/archive-alx_tachydromos.html` using proper query blocks.
   - Create `templates/single-alx_tachydromos.html` with a PDF button.
   - *Acceptance:* Visiting `/αλεξανδρινός-ταχυδρόμος` loads the archive block template.
-  - [ ] **Verify**
-  - [ ] **Commit**
+  - [x] **Verify**
+  - [x] **Commit**
 - [ ] **Task 2.3: Migration CLI Command**
   - Create `wp eka migrate-tachydromos` WP-CLI command in `inc/cli-commands.php`.
   - Implement read logic from `db207080_eka.wp_posts` using `$wpdb`.

@@ -103,3 +103,12 @@ add_filter('pll_get_post_types', function($post_types, $is_settings) {
     }
     return $post_types;
 }, 10, 2);
+
+// Shortcode for Tachydromos PDF Button
+add_shortcode('tachydromos_pdf_button', function() {
+    $pdf = get_field('pdf_file');
+    if ($pdf && isset($pdf['url'])) {
+        return '<div class="wp-block-button"><a href="' . esc_url($pdf['url']) . '" class="wp-block-button__link wp-element-button" target="_blank" rel="noopener noreferrer">Προβολή PDF / View PDF</a></div>';
+    }
+    return '';
+});
