@@ -1,56 +1,42 @@
-# Ekalexandria Phase 2: Tasks
+# CPT Migration Tasks
 
-*Reference: See `tasks/legacy_data.md` for exact naming and ID mapping of menus and sliders.*
+## Checkpoint: Preparation
+- [ ] Verify access to `db207080_eka` credentials.
+- [ ] Review `inc/custom-features.php` to ensure CPT registration conventions.
 
-- [x] **Slice 1: Global Elements & Multilingual Headers (Branch: `feature/slice-1-navigation`)**
-  - [x] `git checkout -b feature/slice-1-navigation`
-  - [x] Create language-specific header parts: `header-el.html`, `header-en.html`, `header-ar.html`.
-  - [x] Create language-specific footer parts: `footer-el.html`, `footer-en.html`, `footer-ar.html`.
-  - [x] Add native Navigation block placeholders to the headers mapped to the extracted Main Menus (e.g., "Main Greek Menu", "Main English Menu").
-  - [x] Add native Navigation block placeholder to the Greek footer mapped to "Footer Greek Menu".
-  - [x] Verify visual parity and structure.
-  - [x] `git commit -am "feat: implement language-specific headers and footers with menu placeholders"`
-  - [x] `git checkout main && git merge feature/slice-1-navigation`
+## Phase 1: Alexandrinos Tachydromos
+- [ ] **Task 1.1: Registration & Configuration**
+  - Register `alexandrinos_tachydromos` CPT (PHP 8.x strict types).
+  - Register `group_alexandrinos_pdf` ACF field.
+  - Exclude from Polylang explicitly.
+  - *Acceptance:* CPT appears in admin sidebar; ACF field visible on edit screen.
+- [ ] **Task 1.2: FSE Templates**
+  - Create `archive-alexandrinos_tachydromos.html` with filter shortcode.
+  - Create `single-alexandrinos_tachydromos.html` with PDF button shortcode.
+  - *Acceptance:* Visiting `/alexandrinos_tachydromos` loads the archive block template.
+- [ ] **Task 1.3: Migration CLI Command**
+  - Create `wp eka migrate-tachydromos` WP-CLI command.
+  - Implement read logic from `db207080_eka.wp_posts`.
+  - Parse legacy layout, extract PDF/image pairs.
+  - Insert idempotent records with mapped media.
+  - *Acceptance:* Command runs without errors; data populates correctly on staging.
 
-- [x] **Slice 2: Custom Post Types (Branch: `feature/slice-2-cpts`)**
-  - [x] `git checkout -b feature/slice-2-cpts`
-  - [x] Register `neo_fos` CPT for newsletters.
-  - [x] Create and run script to extract legacy Neo Fos content.
-  - [x] Register Board Members CPT/structure and extract data.
-  - [x] Verify CPTs and data in WP Admin.
-  - [x] `git commit -am "feat: register CPTs and extract legacy data"`
-  - [x] `git checkout main && git merge feature/slice-2-cpts`
+## Checkpoint: Phase 1 Review
+- [ ] Verify Alexandrinos Tachydromos on frontend.
+- [ ] Verify idempotency (running the command twice does not duplicate posts).
 
-- [x] **Slice 3: Language-Specific Core Templates (Branch: `feature/slice-3-templates`)**
-  - [x] `git checkout -b feature/slice-3-templates`
-  - [x] Build language-specific page templates: `page-el.html`, `page-en.html`, `page-ar.html` (including their respective headers/footers).
-  - [x] Build `single-neo_fos.html` template.
-  - [x] Build `archive-neo_fos.html` template.
-  - [x] Build `archive.html`, `search.html`, and `404.html` templates.
-  - [x] Verify templates load without Block Editor errors.
-  - [x] `git commit -am "feat: implement language-specific FSE page templates"`
-  - [x] `git checkout main && git merge feature/slice-3-templates`
+## Phase 2: Board Members
+- [ ] **Task 2.1: Registration & Configuration**
+  - Register `board_member` CPT.
+  - Expose to Polylang via `pll_get_post_types` hook.
+  - *Acceptance:* CPT appears in admin; translation icons visible in listing.
+- [ ] **Task 2.2: Migration CLI Command**
+  - Create `wp eka migrate-board` WP-CLI command.
+  - Read legacy "Στελέχωση" grids from `db207080_eka`.
+  - Extract member data and attach `_thumbnail_id`.
+  - Insert idempotent records.
+  - *Acceptance:* Command runs successfully; members appear in backend with languages intact.
 
-- [x] **Slice 4: Dynamic Loops & Static Gallery Placeholders (Branch: `feature/slice-4-placeholders`)**
-  - [x] `git checkout -b feature/slice-4-placeholders`
-  - [x] Implement native Gutenberg dynamic Query Loop block for the Homepage to pull the latest 5 News/Ανακοινώσεις posts.
-  - [x] Implement the same dynamic Query Loop block for the News Page.
-  - [x] Insert native Gutenberg `core/gallery` blocks programmatically populated with the exact Image IDs listed in `legacy_data.md` for the inner-page galleries (Staff, Greek Club, Cemeteries, Music Museum, Science Museum, Cemeteries Conservation).
-  - [x] `git commit -am "feat: implement dynamic news loops and static gallery placeholders"`
-  - [x] `git checkout main && git merge feature/slice-4-placeholders`
-
-- [x] **Slice 5: Homepage Widgets & Page Recoveries (Branch: `feature/slice-5-page-recovery`)**
-  - [x] `git checkout -b feature/slice-5-page-recovery`
-  - [x] Rebuild homepage widgets (Υπηρεσίες, Ιστορία, Ι.Ν. Ευαγγελισμού) using native columns/groups in `front-page.html`.
-  - [x] Insert native Navigation placeholders for nested in-page sub-menus on Establishment, Activities, and Services parent/child pages (mapping to the respective language menus).
-  - [x] Restore partner logos on `/el/διάφορα/σύνδεσμοι/`.
-  - [x] Restore icons on `/el/ανακοινώσεις-νέα/ανακοινώσεις-εκα/`.
-  - [x] `git commit -am "feat: recover specific page widgets and in-page nested menus"`
-  - [x] `git checkout main && git merge feature/slice-5-page-recovery`
-
-- [x] **Slice 6: Deployment Prep (Branch: `feature/slice-6-sanitization`)**
-  - [x] `git checkout -b feature/slice-6-sanitization`
-  - [x] Write WP-CLI cleanup script for legacy plugin tables (WPBakery, LayerSlider, RevSlider).
-  - [x] Test cleanup script safely on local staging database.
-  - [x] `git commit -am "chore: create and test DB sanitization scripts"`
-  - [x] `git checkout main && git merge feature/slice-6-sanitization`
+## Checkpoint: Final Review
+- [ ] Verify Board Members output in existing query loops.
+- [ ] Validate staging environment readiness for production cutover.

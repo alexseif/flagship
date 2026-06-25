@@ -27,12 +27,12 @@
 - `single-alexandrinos_tachydromos.html`: Must include a custom shortcode `[alexandrinos_pdf_link]` to generate a styled "Download / View PDF" block button.
 
 ### Migration Logic
-1. Pull legacy layout from page ID `7380` (Αλεξανδρινός Ταχυδρόμος).
-2. Use regex to extract pairs: `<a href="...pdf">` and `<img class="wp-image-{ID}">`.
-3. Create new `alexandrinos_tachydromos` posts.
-4. Set the `_thumbnail_id` directly from the extracted image IDs.
-5. Populate the `alexandrinos_pdf_file` ACF field with the corresponding PDF URL or ID.
-6. Normalize the post titles into "Greek Month Year" format.
+1. Query the parallel legacy database `db207080_eka` (specifically `wp_posts` for page ID `7380` - Αλεξανδρινός Ταχυδρόμος) to retrieve the original layout content.
+2. Parse the legacy `post_content` using regex/DOM parsing to extract pairs: `<a href="...pdf">` and `<img class="wp-image-{ID}">`.
+3. Create new `alexandrinos_tachydromos` posts in the target database.
+4. Set the `_thumbnail_id` directly from the extracted image IDs (assuming media IDs remain consistent).
+5. Populate the `alexandrinos_pdf_file` ACF field with the corresponding PDF URL or ID in the target database.
+6. Normalize the new post titles into "Greek Month Year" format.
 
 ---
 
@@ -51,6 +51,17 @@
 - Must be explicitly exposed to Polylang via `pll_get_post_types` filter to ensure members can be associated across EN/AR/EL.
 
 ### Migration Logic
-1. Extract board members from legacy "Στελέχωση" shortcodes/grids.
-2. Ensure any legacy WPBakery attached images are properly set as the `_thumbnail_id`.
-3. Assign them to `board_member` CPT.
+1. Query the parallel legacy database `db207080_eka` to extract board members from legacy "Στελέχωση" shortcodes/grids in page content or relevant meta.
+2. Ensure any legacy WPBakery attached images are properly mapped and set as the `_thumbnail_id` in the target database.
+3. Insert them as the new `board_member` CPT in the target database.
+
+---
+
+## 3. Deployment Transformation Strategy
+**Goal:** Apply the migration scripts to safely transform the production database from the legacy structure to the new block-native architecture.
+
+### Execution Plan
+- **Data Source:** All migration scripts must explicitly read source data from the parallel database `db207080_eka`.
+- **Target:** The scripts will write the transformed CPT data into the active (current) database.
+- **Idempotency:** The migration scripts must be idempotent. They should verify if the target `alexandrinos_tachydromos` or `board_member` posts already exist before inserting them to prevent duplication during repeated runs.
+- **Production Cutover:** These scripts will be packaged as standalone executables (e.g., custom WP-CLI commands). During deployment to production, the scripts will be executed to seamlessly update the live database structure without losing any original legacy content.
