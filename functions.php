@@ -52,6 +52,9 @@ add_action('init', 'flagship_register_block_styles');
 
 require_once get_theme_file_path( '/inc/custom-features.php' );
 
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+    require_once get_theme_file_path( '/inc/cli-commands.php' );
+}
 // Disable Contact Form 7 reCAPTCHA during development
 add_filter( 'wpcf7_use_recaptcha_net', '__return_false' );
 add_action( 'wp_print_scripts', function() {

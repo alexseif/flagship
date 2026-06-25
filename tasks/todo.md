@@ -21,7 +21,7 @@
   - *Acceptance:* Visiting `/αλεξανδρινός-ταχυδρόμος` loads the archive block template.
   - [x] **Verify**
   - [x] **Commit**
-- [ ] **Task 2.3: Migration CLI Command**
+- [x] **Task 2.3: Migration CLI Command**
   - Create `wp eka migrate-tachydromos` WP-CLI command in `inc/cli-commands.php`.
   - Implement read logic from `db207080_eka.wp_posts` using `$wpdb`.
   - Parse legacy layout by iterating `.pdf` links, finding corresponding `<img>` and titles.
@@ -29,8 +29,8 @@
   - Strip dimension suffixes from image names to locate original `_thumbnail_id`.
   - Insert idempotent records.
   - *Acceptance:* Command runs idempotently without errors; data populates correctly without duplicating media.
-  - [ ] **Verify**
-  - [ ] **Commit**
+  - [x] **Verify**
+  - [x] **Commit**
 
 ## Checkpoint: Phase 2 Review
 - [ ] Verify Alexandrinos Tachydromos on frontend (Greek URLs, no language prefix).
