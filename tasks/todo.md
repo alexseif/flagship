@@ -8,13 +8,13 @@
 - [x] **Commit:** Atomic commit for any prerequisite configuration updates.
 
 ## Phase 2: Alexandrinos Tachydromos (Newsletters)
-- [ ] **Task 2.1: Registration & Configuration**
+- [x] **Task 2.1: Registration & Configuration**
   - Register `alx_tachydromos` CPT (PHP 8.x strict types, `show_in_rest` => true for Gutenberg) with rewrite slug `αλεξανδρινός-ταχυδρόμος`.
   - Register ACF fields for the PDF file.
   - Exclude `alx_tachydromos` from Polylang explicitly so it is not translatable.
   - *Acceptance:* CPT appears in admin sidebar; Gutenberg editor works; ACF field visible on edit screen; URL resolves correctly.
-  - [ ] **Verify**
-  - [ ] **Commit**
+  - [x] **Verify**
+  - [x] **Commit**
 - [ ] **Task 2.2: FSE Templates**
   - Create `templates/archive-alx_tachydromos.html` using proper query blocks.
   - Create `templates/single-alx_tachydromos.html` with a PDF button.

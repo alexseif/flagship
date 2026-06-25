@@ -42,3 +42,64 @@ function ekalexandria_polylang_shortcode() {
     return '';
 }
 add_shortcode( 'polylang_langswitcher', 'ekalexandria_polylang_shortcode' );
+
+// Register Alexandrinos Tachydromos CPT
+add_action('init', function() {
+    register_post_type('alx_tachydromos', [
+        'labels' => [
+            'name' => 'Alexandrinos Tachydromos',
+            'singular_name' => 'Tachydromos',
+            'menu_name' => 'Tachydromos',
+            'add_new' => 'Add New',
+            'add_new_item' => 'Add New Tachydromos',
+            'edit_item' => 'Edit',
+            'new_item' => 'New',
+            'view_item' => 'View',
+            'search_items' => 'Search',
+            'not_found' => 'No items found',
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'show_in_rest' => true,
+        'supports' => ['title', 'editor', 'thumbnail'],
+        'rewrite' => ['slug' => 'αλεξανδρινός-ταχυδρόμος', 'with_front' => false],
+        'menu_icon' => 'dashicons-media-document',
+    ]);
+});
+
+// Register ACF fields for Tachydromos PDF
+add_action('acf/init', function() {
+    if( function_exists('acf_add_local_field_group') ):
+        acf_add_local_field_group(array(
+            'key' => 'group_tachydromos_pdf',
+            'title' => 'Tachydromos PDF',
+            'fields' => array(
+                array(
+                    'key' => 'field_tachydromos_pdf_file',
+                    'label' => 'PDF File',
+                    'name' => 'pdf_file',
+                    'type' => 'file',
+                    'return_format' => 'array',
+                    'mime_types' => 'pdf',
+                ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'alx_tachydromos',
+                    ),
+                ),
+            ),
+        ));
+    endif;
+});
+
+// Exclude Tachydromos from Polylang
+add_filter('pll_get_post_types', function($post_types, $is_settings) {
+    if (isset($post_types['alx_tachydromos'])) {
+        unset($post_types['alx_tachydromos']);
+    }
+    return $post_types;
+}, 10, 2);
