@@ -55,11 +55,11 @@ This document outlines the step-by-step master plan to modernize the digital inf
     *   Code clean, fast database filters and sorting functions to display the newsletter archive natively.
 *   [x] **Task 5.2: Board of Directors Engineering**
     *   Build custom FSE page templates and queries to dynamically map and display translated board members across three languages natively.
-*   [ ] **Task 5.2: News Section Optimization**
+*   [ ] **Task 5.3: News Section Optimization**
     *   Build optimized query loops to surface high-priority community news dynamically.
-*   [ ] **Task 5.3: Modern Secure Token Setup (Mailchimp Engine)**
+*   [ ] **Task 5.4: Modern Secure Token Setup (Mailchimp Engine)**
     *   Develop the direct OAuth token loop to securely pass communications to external marketing list engines without utilizing vulnerable text passwords.
-*   [ ] **Task 5.4: Community Advertisement Injection Slots**
+*   [ ] **Task 5.5: Community Advertisement Injection Slots**
     *   Program clean layout positions for relevant community advertisements to safely run without tracking scripts slowing down page loading.
 
 ## Phase 6: Full Data Migration & System Calibration
