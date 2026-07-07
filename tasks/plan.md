@@ -47,8 +47,8 @@ To adhere to strict project standards, every task must follow the **`/build` wor
 
 ### Phase 3: Board Members End-to-End
 *This slice covers the extraction of the complex WPBakery grids into a clean, translatable `board_member` CPT.*
-- **Scope:** Register the `board_member` CPT, explicitly expose it to Polylang for translation linking, and build the WP-CLI command (`wp eka migrate-board`) to parse the legacy shortcode data into native posts with Greek as the primary language and English/Arabic as translations.
-- **Verification:** Board members appear in the admin panel with appropriate language associations. The script is idempotent and handles unlinked translations gracefully.
+- **Scope:** Register the `board_member` CPT, explicitly expose it to Polylang for translation linking, and build the WP-CLI command (`wp eka migrate-board`) to parse the legacy shortcode data into native posts with Greek as the primary language and English/Arabic as translations. The script must parse the legacy layout order and assign a sequential `menu_order` for sorting, and set the post status to `publish` (allowing editors to disable them later by changing to draft).
+- **Verification:** Board members appear in the admin panel with appropriate language associations, ordered correctly by `menu_order`, and with `publish` status. The script is idempotent and handles unlinked translations gracefully.
 
 ## Estimated Token Cost Analysis
 *Calculations based on standard AI-assisted coding rates (approx. $3/1M input, $15/1M output).*

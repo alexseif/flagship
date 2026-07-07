@@ -3,15 +3,20 @@
 ## 1. Objective
 Complete the migration of legacy "Alexandrinos Tachydromos" (Newsletters) and "Board of Directors" data from `db207080_eka` into clean, native Custom Post Types on the flagship theme. This revised migration requires meticulous data mapping to preserve exact media assets, proper Polylang relations, precise URLs with Greek characters, and accurate publish dates derived from file uploads.
 
-## 2. Server Prerequisites
+## 2. Server Prerequisites & Configuration
 *   **ImageMagick (PHP `imagick` extension):** Required to process and convert PDF pages into image files.
-*   **Ghostscript:** Required on the server level for ImageMagick to read and rasterize PDF files.
+*   **Ghostscript (`gs` package):** Required on the server level for ImageMagick to read and rasterize PDF files.
+*   **ImageMagick Policy Config:** The server's `/etc/ImageMagick-6/policy.xml` must have the `PDF` policy configured with `rights="read|write"` (not `none`) to prevent security blocking of PDF parsing.
+*   **Plugins:** The `pdf-thumbnail-generator` plugin must be installed and active, alongside **Advanced Custom Fields (ACF)** for the PDF upload field.
+*   **Verification Script:** A bash or WP-CLI script must be written and executed prior to migration to automatically verify that the `imagick` extension is loaded, Ghostscript is accessible, and the `policy.xml` allows PDF read/write operations.
 
 ## 3. Core Features & Acceptance Criteria
 
 ### 3.1 Board of Directors (Στελέχωση)
 *   **Main Language:** The Greek version of the testimonials must be set as the canonical/primary language post.
 *   **Translation Mapping:** The migration script must map and link English and Arabic versions to the Greek main post automatically based on naming conventions or legacy Polylang terms. If the relation is ambiguous or cannot be reliably determined programmatically, the script must insert the post but leave the translation unlinked for manual resolution.
+*   **Ordering:** Board members are sortable and require a specific order. The migration script must assign a sequential `menu_order` (e.g., 1, 2, 3...) based on their order of appearance in the legacy source. The frontend FSE template must query by `menu_order` ASC.
+*   **Visibility (Enable/Disable):** Board members will be enabled or disabled via standard WordPress post statuses (`publish` vs `draft`). The migration script must insert all legacy members as `publish`.
 
 ### 3.2 Alexandrinos Tachydromos (Newsletters)
 *   **URL Structure:** The CPT must use the exact Greek rewrite slug `αλεξανδρινός-ταχυδρόμος`. Single posts should resolve to `/αλεξανδρινός-ταχυδρόμος/{post_slug}/`. The internal CPT key will be `alx_tachydromos` to respect the WordPress 20-character limit.
@@ -26,9 +31,9 @@ Complete the migration of legacy "Alexandrinos Tachydromos" (Newsletters) and "B
 *   **Tooling:** WP-CLI (`wp eka migrate-board`, `wp eka migrate-tachydromos`).
 *   **Parsing:** `DOMDocument` for legacy HTML extraction.
 *   **Localization:** Polylang functions (`pll_save_post_translations`, `pll_set_post_language`).
-*   **Time-Saving Plugins:**
+*   **Plugins:**
     *   **Advanced Custom Fields (ACF):** For PDF upload fields.
-    *   **PDF Image Generator** (or similar PDF-to-thumbnail plugin): Automatically generates a featured image from the first page of a PDF upon upload. Using an established plugin for this saves us from writing and maintaining custom `Imagick` PHP hooks.
+    *   **PDF Image Generator Plugin:** Automatically generates an attachment thumbnail from the first page of a PDF. A custom hook (`acf/save_post`) is used to assign this attachment as the post's Featured Image.
 
 ## 5. Project Structure
 *   `inc/custom-features.php`: CPT registration and ACF field setup.

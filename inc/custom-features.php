@@ -105,12 +105,20 @@ add_action('init', function() {
             'menu_name' => 'Board Members',
         ],
         'public' => true,
-        'has_archive' => false,
+        'has_archive' => true,
         'show_in_rest' => true,
         'supports' => ['title', 'editor', 'thumbnail', 'page-attributes'],
         'rewrite' => ['slug' => 'board-members', 'with_front' => false],
         'menu_icon' => 'dashicons-groups',
     ]);
+});
+
+// Redirect single board members to the archive page
+add_action('template_redirect', function() {
+    if (is_singular('board_member')) {
+        wp_redirect(get_post_type_archive_link('board_member'), 301);
+        exit;
+    }
 });
 
 // Exclude Tachydromos and include Board Member for Polylang
@@ -130,3 +138,13 @@ add_shortcode('tachydromos_pdf_button', function() {
     }
     return '';
 });
+
+// Auto-set featured image from PDF
+add_action('acf/save_post', function($post_id) {
+    if (get_post_type($post_id) === 'alx_tachydromos') {
+        $pdf = get_field('pdf_file', $post_id);
+        if ($pdf && isset($pdf['ID'])) {
+            set_post_thumbnail($post_id, $pdf['ID']);
+        }
+    }
+}, 20);
