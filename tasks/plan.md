@@ -1,62 +1,121 @@
-# CPT Migration Plan
+# Execution Plan: EKA Portal News Section Optimization (Task 5.3)
 
-## Context
-**Goal:** Complete the migration of legacy "Alexandrinos Tachydromos" (Newsletters) and "Board of Directors" data from `db207080_eka` into clean, native Custom Post Types on the flagship theme.
-**Environment:** Staging (`backstage.ekalexandria.org`)
-**Source:** Parallel legacy database (`db207080_eka`)
-**Target:** Current staging database
-
-## Prerequisites
-- **ImageMagick (PHP `imagick` extension)** must be installed and active.
-- **Ghostscript** must be installed on the server to allow ImageMagick to process PDFs.
-- **Plugins:** ACF (for PDF upload) and a **PDF Image Generator** plugin (to handle automatic PDF-to-thumbnail generation, as specified in the migration protocol).
+## Overview
+This plan breaks down the modernization of the EKA Portal News Section into vertical, verifiable slices. We will prioritize native FSE block compatibility, performance, and clear boundaries between data logic and presentation.
 
 ## Dependency Graph
 ```mermaid
 graph TD
-    A[Prerequisites & Plugin Installation] --> B[CPT Registration in custom-features.php]
-    B --> C[Polylang Configuration Rules]
-    B --> D[FSE Templates: archive-alx_tachydromos.html & single-alx_tachydromos.html]
-    C --> E[WP-CLI Migration Commands in cli-commands.php]
-    E --> F[Data Transformation Execution: wp eka migrate-tachydromos & migrate-board]
-    D --> F
-    F --> G[Validation & Production Cutover Prep]
+    A[Task 1.1: Sticky Expiration Logic] --> C[Task 3.2: News Query Loop Part]
+    B[Task 1.2: Dynamic Date Logic] --> C
+    D[Task 2.1: Swiper.js & SCSS Scaffold] --> E[Task 3.1: Hero Carousel Part]
+    C --> F[Task 4.2: Template Unification]
+    E --> F
+    G[Task 4.1: AJAX Filter System] --> F
 ```
 
-## Standards & Workflow (`/build` Loop)
-To adhere to strict project standards, every task must follow the **`/build` workflow loop**:
-1. **Implement:** Write the code to satisfy the acceptance criteria.
-2. **Verify:** Run tests or execute scripts to confirm it works perfectly.
-3. **Commit:** Create an atomic Git commit reflecting the exact slice of work.
-4. **Check-off:** Mark the task complete in `todo.md`.
+## Phase 1: Backend Foundations & Logic (PHP)
+*Goal: Ensure data flows correctly to the FSE templates before building the UI.*
 
-*Note: The user must approve ("yes" or "proceed") before finalizing a phase or running destructive commands.*
+### Task 1.1: 30-Day Sticky Expiration & Announcement Pinning
+- **Description:** Hook into `pre_get_posts` to apply sticky and "Announcements" pinning rules. This must expire automatically if the post is > 30 days old.
+- **Implementation:** `inc/news-logic.php`
+- **Acceptance Criteria:** 
+  - Posts marked sticky or in "Announcements" published within the last 30 days appear first.
+  - Older sticky/announcement posts behave as standard posts.
+  - Works correctly within Polylang multilingual constraints.
+- **Verification Step:** Create an "Announcements" post dated 31 days ago and one dated 29 days ago. Verify only the newer one sticks to the top.
 
-## Vertical Task Slices
+### Task 1.2: Dynamic Date Formatting (21-Day Relative Date)
+- **Description:** Filter the native `core/post-date` block output via PHP `render_block`.
+- **Implementation:** `inc/news-logic.php`
+- **Acceptance Criteria:**
+  - Date <= 21 days: Displays as "X days ago"
+  - Date > 21 days: Displays standard absolute date.
+- **Verification Step:** Change publication dates of test posts and verify output on frontend.
 
-### Phase 1: Environment & Plugin Preparation
-*This slice handles the server-level and WordPress-level prerequisites before writing custom code.*
-- **Scope:** Verify ImageMagick and Ghostscript. Install/activate ACF and a PDF Image Generator plugin.
-- **Verification:** Plugins are active, server environment supports PDF rasterization.
+---
+**[CHECKPOINT 1] Human-in-the-Loop Verification Required:** Manually verify data querying logic and custom data formatting in isolation. Do not proceed until human approval is given.
+**[GIT]** Commit phase: `git commit -m "feat(news): implement backend foundations and logic"`
+---
 
-### Phase 2: Alexandrinos Tachydromos (Newsletters) End-to-End
-*This slice handles everything required for the newsletter, from registration to final data population.*
-- **Scope:** Register the `alx_tachydromos` CPT (with Gutenberg enabled `show_in_rest => true`) with the Greek rewrite slug `αλεξανδρινός-ταχυδρόμος` and ACF field. Exclude it from Polylang indexing. Create the FSE block templates (`archive-alx_tachydromos.html`, `single-alx_tachydromos.html`).
-- **Migration:** Build a WP-CLI command (`wp eka migrate-tachydromos`) to migrate data from the legacy DB with PDF upload date matching and image suffix stripping.
-- **Verification:** Editor can create a post, upload a PDF, and the featured image is extracted automatically via the plugin. The WP-CLI command runs idempotently. Legacy PDFs are accessible on the frontend via the new block templates at the exact Greek URL.
+## Phase 2: UI Foundations (Styles & Scripts)
+*Goal: Prepare the static assets required by the FSE blocks.*
 
-### Phase 3: Board Members End-to-End
-*This slice covers the extraction of the complex WPBakery grids into a clean, translatable `board_member` CPT.*
-- **Scope:** Register the `board_member` CPT, explicitly expose it to Polylang for translation linking, and build the WP-CLI command (`wp eka migrate-board`) to parse the legacy shortcode data into native posts with Greek as the primary language and English/Arabic as translations. The script must parse the legacy layout order and assign a sequential `menu_order` for sorting, and set the post status to `publish` (allowing editors to disable them later by changing to draft).
-- **Verification:** Board members appear in the admin panel with appropriate language associations, ordered correctly by `menu_order`, and with `publish` status. The script is idempotent and handles unlinked translations gracefully.
+### Task 2.1: Swiper.js Integration & CSS Scaffolding
+- **Description:** Enqueue Swiper.js. Set up the SCSS scaffolding for the carousel and the horizontal rows.
+- **Implementation:** `functions.php`, `assets/scss/news.scss`, `assets/js/news-carousel.js`
+- **Acceptance Criteria:** 
+  - Scripts load without render-blocking.
+  - Mobile-first CSS architecture for sleek rows.
 
-## Estimated Token Cost Analysis
-*Calculations based on standard AI-assisted coding rates (approx. $3/1M input, $15/1M output).*
+---
+**[CHECKPOINT 2] Human-in-the-Loop Verification Required:** Verify asset delivery and initial styles via browser inspection. Do not proceed until human approval is given.
+**[GIT]** Commit phase: `git commit -m "feat(news): integrate Swiper.js and scaffold SCSS"`
+---
 
-| Phase / Action | Est. Input Tokens | Est. Output Tokens | Estimated Cost (USD) |
-| :--- | :--- | :--- | :--- |
-| **Phase 1: Environment Prep** | ~5,000 | ~500 | $0.02 |
-| **Phase 2: Tachydromos** | ~20,000 | ~3,500 | $0.11 |
-| **Phase 3: Board Members** | ~15,000 | ~2,500 | $0.08 |
-| **Testing, Debugging & Revisions** | ~25,000 | ~2,000 | $0.11 |
-| **Total** | **~65,000** | **~8,500** | **~$0.32** |
+## Phase 3: FSE Components
+*Goal: Build the reusable template parts.*
+
+### Task 3.1: News Hero Carousel Template Part
+- **Description:** Construct the HTML template part for the 5-post hero carousel, wrapping a query loop in Swiper.js markup.
+- **Implementation:** `parts/news-hero-carousel.html`
+- **Acceptance Criteria:** 
+  - Pulls the 5 most recent posts globally.
+  - Operates independently from the main query.
+- **Verification Step:** Check block editor and frontend for accurate 5-post carousel rendering.
+
+### Task 3.2: News Query Loop Template Part
+- **Description:** Create the native FSE Query Loop block structure for the sleek rows.
+- **Implementation:** `parts/news-query-loop.html`
+- **Acceptance Criteria:** 
+  - Layout: Image, Title, Category, Excerpt, Dynamic Date, Share Button.
+  - No Author displayed.
+  - High SEO markup (semantic HTML).
+- **Verification Step:** Inspect DOM for missing author, presence of all required fields, and semantic structure.
+
+---
+**[CHECKPOINT 3] Human-in-the-Loop Verification Required:** Verify complete FSE blocks in isolation via the Site Editor. Do not proceed until human approval is given.
+**[GIT]** Commit phase: `git commit -m "feat(news): build hero carousel and query loop template parts"`
+---
+
+## Phase 4: Page Assembly & Filtering
+*Goal: Put everything together and add AJAX interactivity.*
+
+### Task 4.1: Filter System & AJAX Endpoint
+- **Description:** Build the Category/Year/Month filter UI. Implement an AJAX-based History API system to refresh the main query loop.
+- **Implementation:** `inc/news-filters.php`, `assets/js/news-filters.js`
+- **Acceptance Criteria:** 
+  - Filters update results without a hard page reload.
+  - URL updates seamlessly (History API).
+  - Sleek progress loader appears underneath the top bar during transitions.
+  - Language boundaries are respected.
+- **Verification Step:** Switch categories via the filter, ensure URL updates, content updates, and no full reload occurs. Switch language and verify results.
+
+### Task 4.2: Template Unification
+- **Description:** Apply the final layout (Carousel + Filters + Query Loop) to all target templates.
+- **Implementation:** `templates/home.html` (or `index.html`), `templates/archive.html`, `templates/category.html`
+- **Acceptance Criteria:** 
+  - UI is 100% consistent across all news routes.
+- **Verification Step:** Navigate between Home, an Archive, and a Category page to ensure visual parity. Run Lighthouse performance audit.
+
+---
+**[CHECKPOINT 4] Human-in-the-Loop Verification Required:** Final review, cross-device testing, and Lighthouse audit. Do not proceed until human approval is given.
+**[GIT]** Commit phase: `git commit -m "feat(news): assemble pages and implement AJAX filtering"`
+---
+
+## Revised Cost Estimation & Aggressive Optimization
+
+By selecting **Option B** (filtering the native `core/post-date` block) and enforcing strict human-in-the-loop checkpoints, we have eliminated the need for React component scaffolding and heavy JS generation. This drastically cuts output tokens.
+
+| Metric | Revised Volume | Estimated Cost (Frontier Models) |
+| :--- | :--- | :--- |
+| **Input Tokens (Context, Reads)** | ~100k tokens | ~$0.30 (at $3.00 / 1M) |
+| **Output Tokens (Code Generation)**| ~5k tokens | ~$0.075 (at $15.00 / 1M) |
+| **Total Estimated AI Cost** | | **~$0.37** |
+
+**Aggressive Token Optimization Strategies Enforced:**
+1. **Eliminated Scaffold Code:** Option B removed the need to generate `block.json`, `index.js`, and React editor logic, cutting estimated output tokens by ~60%.
+2. **Micro-Reading over Macro-Reading:** Instead of using `view_file` to read entire FSE templates or large PHP files, I will use `grep_search` to surgically locate and read only the necessary nodes. This prevents massive input context accumulation.
+3. **Surgical Output Edits:** I will exclusively use `multi_replace_file_content` to inject logic rather than rewriting full `archive.html` or `functions.php` files.
+4. **Concise Assistant Summaries:** Because human-in-the-loop requires multiple conversation turns, the chat history naturally grows. To prevent input token bloat, I will keep all conversational replies extremely concise and refrain from re-summarizing code or repeating the plan.

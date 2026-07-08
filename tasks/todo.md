@@ -1,62 +1,24 @@
-# CPT Migration Tasks
+# Task List: EKA Portal News Section Optimization
 
-## Checkpoint: Preparation (Phase 1)
-- [x] Verify access to `db207080_eka` credentials.
-- [x] Review `inc/custom-features.php` to ensure CPT registration conventions.
-- [x] Verify Server Prerequisites: Check if `imagick` PHP extension and Ghostscript are active on the staging server.
-- [x] Install and activate required plugins: **Advanced Custom Fields (ACF)** and a **PDF Image Generator** plugin.
-- [x] **Commit:** Atomic commit for any prerequisite configuration updates.
+## Phase 1: Backend Foundations & Logic
+- [ ] **Task 1.1:** Implement 30-Day Sticky Expiration & Announcement Pinning (`inc/news-logic.php`)
+- [ ] **Task 1.2:** Filter native `core/post-date` block for Dynamic Date Formatting (`inc/news-logic.php`)
+- [ ] **Human Verification 1:** Manually verify data querying logic and custom data formatting on the frontend. Await human approval.
+- [ ] **Git:** `git add . && git commit -m "feat(news): implement backend foundations and logic"`
 
-## Phase 2: Alexandrinos Tachydromos (Newsletters)
-- [x] **Task 2.1: Registration & Configuration**
-  - Register `alx_tachydromos` CPT (PHP 8.x strict types, `show_in_rest` => true for Gutenberg) with rewrite slug `αλεξανδρινός-ταχυδρόμος`.
-  - Register ACF fields for the PDF file.
-  - Exclude `alx_tachydromos` from Polylang explicitly so it is not translatable.
-  - *Acceptance:* CPT appears in admin sidebar; Gutenberg editor works; ACF field visible on edit screen; URL resolves correctly.
-  - [x] **Verify**
-  - [x] **Commit**
-- [x] **Task 2.2: FSE Templates**
-  - Create `templates/archive-alx_tachydromos.html` using proper query blocks.
-  - Create `templates/single-alx_tachydromos.html` with a PDF button.
-  - *Acceptance:* Visiting `/αλεξανδρινός-ταχυδρόμος` loads the archive block template.
-  - [x] **Verify**
-  - [x] **Commit**
-- [x] **Task 2.3: Migration CLI Command**
-  - Create `wp eka migrate-tachydromos` WP-CLI command in `inc/cli-commands.php`.
-  - Implement read logic from `db207080_eka.wp_posts` using `$wpdb`.
-  - Parse legacy layout by iterating `.pdf` links, finding corresponding `<img>` and titles.
-  - Map `post_date` strictly to PDF file upload date.
-  - Strip dimension suffixes from image names to locate original `_thumbnail_id`.
-  - Insert idempotent records.
-  - *Acceptance:* Command runs idempotently without errors; data populates correctly without duplicating media.
-  - [x] **Verify**
-  - [x] **Commit**
+## Phase 2: UI Foundations (Styles & Scripts)
+- [ ] **Task 2.1:** Integrate Swiper.js & scaffold SCSS (`functions.php`, `news.scss`, `news-carousel.js`)
+- [ ] **Human Verification 2:** Verify asset delivery and initial styles via browser inspection. Await human approval.
+- [ ] **Git:** `git add . && git commit -m "feat(news): integrate Swiper.js and scaffold SCSS"`
 
-## Checkpoint: Phase 2 Review
-- [ ] Verify Alexandrinos Tachydromos on frontend (Greek URLs, no language prefix).
-- [ ] Verify publish dates match PDF uploads.
-- [ ] Verify idempotency (running the command twice does not duplicate posts).
-- [ ] Verify the PDF Image Generator plugin auto-generates thumbnails upon new PDF uploads in the editor.
+## Phase 3: FSE Components
+- [ ] **Task 3.1:** Build News Hero Carousel Template Part (`parts/news-hero-carousel.html`)
+- [ ] **Task 3.2:** Build News Query Loop Template Part (`parts/news-query-loop.html`)
+- [ ] **Human Verification 3:** Verify complete FSE blocks in isolation via the Site Editor. Await human approval.
+- [ ] **Git:** `git add . && git commit -m "feat(news): build hero carousel and query loop template parts"`
 
-## Phase 3: Board Members
-- [x] **Task 3.1: Registration & Configuration**
-  - Register `board_member` CPT.
-  - Expose to Polylang via `pll_get_post_types` hook.
-  - *Acceptance:* CPT appears in admin; translation icons visible in listing.
-  - [x] **Verify**
-  - [x] **Commit**
-- [x] **Task 3.2: Migration CLI Command**
-  - Create `wp eka migrate-board` WP-CLI command in `inc/cli-commands.php`.
-  - Read legacy "Στελέχωση" grids from `db207080_eka`.
-  - Extract member data and attach `_thumbnail_id`.
-  - Map Greek as the primary/canonical language.
-  - Link English and Arabic versions automatically based on naming conventions/Polylang terms.
-  - Leave ambiguous relations unlinked for manual resolution.
-  - Insert idempotent records.
-  - *Acceptance:* Command runs successfully; members appear in backend with correct Greek canonical and linked translations.
-  - [x] **Verify**
-  - [x] **Commit**
-
-## Checkpoint: Final Review
-- [ ] Verify Board Members output in existing query loops.
-- [ ] Validate staging environment readiness for production cutover.
+## Phase 4: Page Assembly & Filtering
+- [ ] **Task 4.1:** Build Filter System & AJAX endpoint (`inc/news-filters.php`, `news-filters.js`)
+- [ ] **Task 4.2:** Unify Templates (`home.html`, `archive.html`, `category.html`)
+- [ ] **Human Verification 4:** Final review, cross-device testing, and Lighthouse audit. Await human approval.
+- [ ] **Git:** `git add . && git commit -m "feat(news): assemble pages and implement AJAX filtering"`
